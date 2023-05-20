@@ -154,6 +154,11 @@ of the heap completly, if the type fits in the self defined boundaries.
 
 ## References
 
+### Blogs
+
+* [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
+* [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
+
 ### Books
 
 * Klaus Iglberger, C++ Software Design - Design Principles and Pattern for High-Quality Software
