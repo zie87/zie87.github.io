@@ -6,6 +6,7 @@ categories: ['Tutorial', 'Type Erasure']
 tags: ['c++']
 ---
 
+# Unused
 
 
 ## References
@@ -21,8 +22,6 @@ tags: ['c++']
 * [Generic Algorithms on Runtime Types in C++ Through Type Erasure](https://www.codeproject.com/Articles/1208983/Generic-Algorithms-on-Runtime-Types-in-Cplusplus-T)
 * [Type Erasure](https://devtut.github.io/cpp/type-erasure.html#a-move-only-std-function)
 * [Type erasure techniques](https://stackoverflow.com/questions/5450159/type-erasure-techniques)
-* [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
-* [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
 * [`std::polymorphic_value` + Duck Typing = Type Erasure](https://www.foonathan.net/2020/01/type-erasure/)
 
 ### Paper
@@ -36,15 +35,11 @@ tags: ['c++']
 * [CppCon 2017: Louis Dionne “Runtime Polymorphism: Back to the Basics”](https://youtu.be/gVGtNFg4ay0)
 * [CppCon 2019: Arthur O'Dwyer "Back to Basics: Type Erasure"](https://www.youtube.com/watch?v=tbUCHifyT24)
 * [CppCon 2019: John Bandela “Polymorphism != Virtual: Easy, Flexible Runtime Polymorphism Without Inheritance”](https://youtu.be/PSxo85L2lC0)
-* [CppCon 2021: Klaus Iglberger "Breaking Dependencies: Type Erasure - A Design Analysis"](https://youtu.be/4eeESJQk-mw)
-* [CppCon 2022: Klaus Iglberger "Breaking Dependencies: Type Erasure - The Implementation Details"](https://youtu.be/qn6OqefuH08)
 * [CppCon 2014: Zach Laine "Pragmatic Type Erasure: Solving OOP Problems w/ Elegant Design Pattern"](https://youtu.be/0I0FD3N5cgM)
 * [CppNow 2014: Cheinan Marks "Practical Type Erasure: A `boost::any` Based Configuration Framework"](https://youtu.be/JPbzOSc3Q7I)
 * [ACCU 2022: Pavel Novikov "Fun With Type Erasure"](https://www.youtube.com/watch?v=e3GcXIHL8NA)
 
-* [Inheritance Is The Base Class of Evil](https://youtu.be/bIhUE5uUFOA)
 * [Type Erasure](https://www.youtube.com/watch?v=ZPk8HuyrKXU)
-* [C++ Weekly:Ep 343 "Digging Into Type Erasure"](https://www.youtube.com/watch?v=iMzEUdacznQ&t=814s)
 * [C++: Type erasure for methods with differing in return types](https://youtu.be/OBdVTyGE4xg)
 
 * Re-implement `std::function` using type-erasure step by step ([Part1](https://youtu.be/4sCfFAAbl70), [Part2](https://youtu.be/w8VLYtcB6xw))
@@ -65,3 +60,24 @@ tags: ['c++']
 * [Boost::type-erasure](https://www.boost.org/doc/libs/1_82_0/doc/html/boost_typeerasure/basic.html)
 * [liberasure](https://github.com/atomgalaxy/liberasure)
 * [A polymorphic value-type for C++](https://github.com/jbcoe/polymorphic_value)
+
+# Used
+
+## References
+
+### Blogs
+
+* [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
+* [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
+
+### Paper
+
+### Videos
+
+* [C++ Weekly:Ep 343 "Digging Into Type Erasure"](https://www.youtube.com/watch?v=iMzEUdacznQ&t=814s)
+* [Inheritance Is The Base Class of Evil](https://youtu.be/bIhUE5uUFOA)
+* [CppCon 2021: Klaus Iglberger "Breaking Dependencies: Type Erasure - A Design Analysis"](https://youtu.be/4eeESJQk-mw)
+* [CppCon 2022: Klaus Iglberger "Breaking Dependencies: Type Erasure - The Implementation Details"](https://youtu.be/qn6OqefuH08)
+
+### Books
+### Code

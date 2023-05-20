@@ -207,6 +207,15 @@ options is really statisfying. In the next post we will take a look at other
 options, which combines templates with other techniques to provide more case 
 specific solutions.
 
+## References
+
+### Blogs
+
+* [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
+
+### Videos
+
+* Jason Turner: C++ Weekly Ep343 ["Digging Into Type Erasure"](https://youtu.be/iMzEUdacznQ)
 
 ## Footnotes
 
