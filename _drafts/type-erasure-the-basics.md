@@ -6,9 +6,10 @@ categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
 
-Some weeks ago, we needed to implement a dynamic message dispatching at work. 
-We had different kinds of messages, which we need to store in a queue and 
-dispatch to systems. To store the messages we needed a type erasure: 
+We needed to implement a dynamic message dispatching at work some weeks ago. 
+We had different kinds of messages, which we needed to store in a queue and 
+dispatch to systems. To store the messages, a type erasure was required. But 
+what is a type erasure?
 
 Type Erasure 
 : A technique to enable the use of various concrete types through a single generic interface.[^1]
@@ -63,16 +64,16 @@ int main() {
 }
 ```
 
-For this approach, we only need to define an interface (`base_message`), which 
-is used by all messages. This allows to store all messages in the same container.
-But this is also the biggest drawbackl of this solution: everything needs to 
-inhert form the base class, this means we need to wrap unrelated classes if we 
-want to store them. This means everything has a strong coupling to the interface 
-class, as soon as this class changes all hell breaks loose.
+For this approach, we only needed to define an interface (`base_message`) used 
+by all messages. The interface allows to store all messages in the same container.
+But this is also the biggest drawback of this solution: everything needs to inherit 
+from the base class: this means we need to wrap unrelated classes if we want to 
+store them. It also means everything is strongly coupled to the interface. As 
+soon as the base class changes, all hell breaks loose.
 
 ## Any Type
 
-The STL provides since C++17 a container type for a single value, which can be 
+The STL provides, since C++17, a container type for a single value, which can be 
 used: [`std::any`][1]. The idea behind this type is not new and was also available 
 for *classic C++* with [`boost::any`][1] since [Boost][3] version *1.23.0*. This type 
 provides storage for a type internally and hides the type information. To use the 
@@ -116,15 +117,15 @@ int main() {
 }
 ```
 
-With the use of [`std::any`][1] we can now store each type we can imagine, no 
-base class needed. But now we have a higher price to pay: with this we rely on 
-the most heavy mechanisms of C++. We need dynamic allocation of memory to create 
-the any objects without the possibility to inject an allocator[^2], it can throw 
-a `std::bad_any_cast` exception on the casts and we need C++ [RTTI][4] for the 
-`type()` member function and for `typeid`. Furthermore nobody can help us, if we 
+Using [`std::any`][1], we can now store each type we can imagine. No base class is 
+needed. But now we have a higher price to pay: with this, we rely on the heaviest 
+mechanisms of C++. We need dynamic allocation of memory to create an any objects, 
+without the possibility of injecting an allocator[^2], it can throw a 
+`std::bad_any_cast` exception on the casts, and we need C++ [RTTI][4] for the 
+`type()` member function and for `typeid`. Furthermore, nobody can help us if we 
 forget to add a type check inside the for-loop.
 
-[RTTI][4] and exceptions can be avoided, if we change to loop to a pointer cast:
+We can avoid [RTTI][4] and exceptions, if we change to loop to a pointer cast:
 ```cpp
     for (const auto& msg : messages) {
         if (auto* ptr = std::any_cast<int_message>(&msg); ptr != nullptr ) {
@@ -138,16 +139,15 @@ forget to add a type check inside the for-loop.
     }
 ``` 
 
-This will not throw any more but now we need to handle `nullptr` and still have 
-the possibility to simply forget to handle a type. We can fix this issue if we 
-combine the type with the dispatch function. The STL provides also an erasure 
-type for this: [`std::function`][5]
+This will not throw anymore, but now we need to handle `nullptr` and still can 
+forget to handle a type. We can fix this issue by combining the type with the 
+dispatch function. The STL also provides an erasure type for this: [`std::function`][5]
 
 ## Function Wrapper
 
-With [`std::function`][5] we are able accept everthing which behaves like a 
-function. So if we can use it, if we change the container to store the operation, 
-rather then the type:
+With [`std::function`][5], we can accept everything which behaves like a 
+function. This means we can use it if we change the container to store the operation 
+rather than the type:
 
 ```cpp
 #include <functional>
@@ -187,25 +187,24 @@ int main() {
 }
 ```
 
-Now we store the operation so it is not possible to forget to handle a type. 
-We still do not need any base class and we can store whatever we want as long 
-at it fits the signature `void(const dispatcher&)`. We can rely on the small 
-object optimization of [`std::function`][5] as long as we do not need to 
-capture values inside the function objects. This approch works well as long as 
-we only need one operation and our objects are small. But what happens if this 
-is not the case? As soon as we have multiple operations on the same objects we 
-need multiple containers or need to combine multiple [`std::function`][5] into 
-a type which we can store. If our objects are getting bigger we also need to 
-care about the storage of this objects, especially if they are shared between 
-different operations.
+Now we store the operation so it is impossible to forget to handle a type. 
+We still do not need any base class and can hold whatever we want if it fits 
+the signature `void(const dispatcher&)`. We can rely on the small object 
+optimization of [`std::function`][5] if we do not need to capture values inside 
+the function objects. This approach works well as we only need one operation, 
+and our objects are small. But what happens if this is not the case? When we 
+have multiple operations on the same objects, we need various containers or 
+combine multiple [`std::function`][5] into a type we can store. If our objects 
+are getting bigger, we also need to care about the storage of these objects, 
+especially if they need to be shared between different operations.
 
 ## Summary so far
 
-With this we have looked at the *out of the box* options C++ and the STL provides. 
-Every option comes with advantages and it's own disadvantages. None of the 
-options is really statisfying. In the next post we will take a look at other 
-options, which combines templates with other techniques to provide more case 
-specific solutions.
+We have looked at the *out of the box* options C++ and the STL provides. 
+Every option comes with advantages and disadvantages. None of the 
+alternatives is satisfying. In the next post, we will look at other 
+options, combining templates with different techniques to provide more 
+case-specific solutions.
 
 ## References
 
