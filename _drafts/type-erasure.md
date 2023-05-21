@@ -34,7 +34,6 @@ tags: ['c++']
 * [Meeting C++ 2022: Olivia Quinet "Experimenting with type erasure in C++17"](https://www.youtube.com/watch?v=yB2H44TzYCI)
 * [CppCon 2017: Louis Dionne “Runtime Polymorphism: Back to the Basics”](https://youtu.be/gVGtNFg4ay0)
 * [CppCon 2019: Arthur O'Dwyer "Back to Basics: Type Erasure"](https://www.youtube.com/watch?v=tbUCHifyT24)
-* [CppCon 2019: John Bandela “Polymorphism != Virtual: Easy, Flexible Runtime Polymorphism Without Inheritance”](https://youtu.be/PSxo85L2lC0)
 * [CppCon 2014: Zach Laine "Pragmatic Type Erasure: Solving OOP Problems w/ Elegant Design Pattern"](https://youtu.be/0I0FD3N5cgM)
 * [CppNow 2014: Cheinan Marks "Practical Type Erasure: A `boost::any` Based Configuration Framework"](https://youtu.be/JPbzOSc3Q7I)
 * [ACCU 2022: Pavel Novikov "Fun With Type Erasure"](https://www.youtube.com/watch?v=e3GcXIHL8NA)
@@ -78,6 +77,7 @@ tags: ['c++']
 * [Inheritance Is The Base Class of Evil](https://youtu.be/bIhUE5uUFOA)
 * [CppCon 2021: Klaus Iglberger "Breaking Dependencies: Type Erasure - A Design Analysis"](https://youtu.be/4eeESJQk-mw)
 * [CppCon 2022: Klaus Iglberger "Breaking Dependencies: Type Erasure - The Implementation Details"](https://youtu.be/qn6OqefuH08)
+* [CppCon 2019: John Bandela “Polymorphism != Virtual: Easy, Flexible Runtime Polymorphism Without Inheritance”](https://youtu.be/PSxo85L2lC0)
 
 ### Books
 ### Code
