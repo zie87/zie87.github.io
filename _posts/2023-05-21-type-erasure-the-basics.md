@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Type Erasure in C++: The Basics'
-date: '2023-05-16 14:43:37'
+date: '2023-05-21 19:33:37'
 categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
