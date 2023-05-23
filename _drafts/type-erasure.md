@@ -50,7 +50,6 @@ tags: ['c++']
 
 ### Code
 
-* [cpp-from-the-sky-down: polymorphic](https://github.com/google/cpp-from-the-sky-down/blob/master/metaprogrammed_polymorphism/polymorphic.hpp)
 * [cpp-type-erasure](https://github.com/nliccini/cpp-type-erasure)
 * [Boost::ext TE](https://github.com/boost-ext/te)
 * [Dyno: Runtime polymorphism done right](https://github.com/ldionne/dyno)
@@ -80,4 +79,6 @@ tags: ['c++']
 * [CppCon 2019: John Bandela “Polymorphism != Virtual: Easy, Flexible Runtime Polymorphism Without Inheritance”](https://youtu.be/PSxo85L2lC0)
 
 ### Books
+
 ### Code
+* [cpp-from-the-sky-down: polymorphic](https://github.com/google/cpp-from-the-sky-down/blob/master/metaprogrammed_polymorphism/polymorphic.hpp)
