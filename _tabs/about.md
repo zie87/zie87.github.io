@@ -13,6 +13,6 @@ revisit them over time to add information and references or update them if I
 see any issues. The main goal is to show the basic ideas and use them as a 
 discussion base or to remind me about the pattern and ideas.
 
-> Disclaimer: The posts on this site are my own and don't necessarily represent 
+> **Disclaimer:** The posts on this site are my own and don't necessarily represent 
 any company's position, strategies, or opinions.
 {: .prompt-warning }
