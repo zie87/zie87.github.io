@@ -20,8 +20,6 @@ Kevlin Henney back in 2000.[^2] In this post, I will describe the type erasure
 presented by Sean Parent in his famous talk from 2013: 
 [Inheritance is The Base Class of Evil][2]
 
-
-
 ## Polymorphic Types
 
 Sean Parent defines two points about polymorphism:
@@ -38,7 +36,6 @@ manner. The implementation looks like this:
 ```cpp
 #include <iostream>
 #include <memory>
-#include <vector>
 
 struct dispatcher {
     void dispatch(const auto& msg) const noexcept {
@@ -49,7 +46,7 @@ struct dispatcher {
 class erasure {
    public:
     template <typename T>
-    erasure(T data) : m_pimpl{new model_t<T>(std::move(data))} {}
+    erasure(T data) : m_pimpl{std::make_unique<model_t<T>>(std::move(data))} {}
 
     erasure(const erasure& other) : m_pimpl{other.m_pimpl->clone()} {}
     erasure& operator=(const erasure& other) {
@@ -70,7 +67,7 @@ class erasure {
    private:
     struct base_t {
         virtual ~base_t() = default;
-        virtual base_t* clone() const = 0;
+        virtual std::unique_ptr<base_t> clone() const = 0;
 
         virtual void dispatch(const dispatcher&) const = 0;
     };
@@ -78,7 +75,9 @@ class erasure {
     template <typename T>
     struct model_t : base_t {
         model_t(T data) : m_data{data} {}
-        base_t* clone() const override { return new model_t(*this); }
+        std::unique_ptr<base_t> clone() const override { 
+            return std::make_unique<model_t>(*this); 
+        }
 
         void dispatch(const dispatcher& sink) const override {
             sink.dispatch(m_data);
@@ -89,6 +88,17 @@ class erasure {
 
     std::unique_ptr<base_t> m_pimpl{nullptr};
 };
+```
+
+The `erasure` class makes the polymorphism into an implementation detail. The 
+base class `base_t` defines the interface for the [PImpl][3] `m_pimpl`. The 
+implementation of the [PImpl][3] is the `model_t` template. This template 
+resolves the call with his internal dispatch member method. 
+
+The provided value semantic make's it also easy to use. The usage in our example 
+can look like this:
+```cpp
+#include <vector>
 
 void dispatch(const erasure& msg, const dispatcher& sink) {
     msg.dispatch(sink);
@@ -113,11 +123,6 @@ int main() {
 }
 ```
 
-The `erasure` class makes the polymorphism into an implementation detail. The 
-base class `base_t` defines the interface for the [PImpl][3] `m_pimpl`. The 
-implementation of the [PImpl][3] is the `model_t` template. This template 
-resolves the call with his internal dispatch member method. 
-
 This implementation allows polymorphism when needed and does not require the 
 messages to inherit from a base class. With this runtime-penalties of 
 polymorphism needs only to be paid when required and do not have any additional 
@@ -140,10 +145,10 @@ If we change `model_t` to:
     template <typename T>
     struct model_t : base_t {
         model_t(T data) : m_data{data} {}
-        base_t* clone() const override { return new model_t(*this); }
+        std::unique_ptr<base_t> clone() const override { return std::make_unique<model_t>(*this); }
 
         void dispatch(const dispatcher& sink) const override {
-            ::dispatch(sink, m_data);
+            ::dispatch_to_sink(sink, m_data);
         }
 
         T m_data;
@@ -164,7 +169,8 @@ boundaries.
 
 We now know an additional way to create a type erasure beyond the options 
 provided by the STL. We have seen an alternative that is type-safe without 
-dependencies to [RTTI][5] and allows interface extension in a single place.
+dependencies to [RTTI][5] and allows interface extension in a single place. If 
+you want to try out this type erasure, you can do so in [compiler explorer][8].
 
 ## References
 
@@ -200,4 +206,4 @@ dependencies to [RTTI][5] and allows interface extension in a single place.
 [5]: https://en.wikipedia.org/wiki/Run-time_type_information
 [6]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
-
+[8]: https://godbolt.org/z/z5WbW9Eh3
