@@ -6,6 +6,11 @@ categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
 
+> This is the first post in a series about type erasures:
+> * [Part1][6]: The Basics
+> * [Part2][7]: A Polymorphic Type
+{: .prompt-info}
+
 We needed to implement a dynamic message dispatching at work some weeks ago. 
 We had different kinds of messages, which we needed to store in a queue and 
 dispatch to systems. To store the messages, a type erasure was required. But 
@@ -226,3 +231,5 @@ case-specific solutions.
 [3]: https://www.boost.org
 [4]: https://en.wikipedia.org/wiki/Run-time_type_information
 [5]: https://en.cppreference.com/w/cpp/utility/functional/function
+[6]: {% post_url 2023-05-21-type-erasure-the-basics%}
+[7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
