@@ -182,7 +182,7 @@ dependencies to [RTTI][5] and allows interface extension in a single place.
 * Sean Parent: GoingNative 2013 ["Inheritance Is The Base Class of Evil"][2]
 * Sean Parent: CppNow 2013 ["Value Semantics and Concepts-based Polymorphism"](https://youtu.be/_BpMYeUFXv8)
   * "extended" version of *Base Class of Evil* (bad audio quality)
-* Sean Parent: NDC {London} 2017 ["Better Code: Runtime Polymorphism"](https;//youtu.be/QGcVXgEVMJg)
+* Sean Parent: NDC {London} 2017 ["Better Code: Runtime Polymorphism"](https://youtu.be/QGcVXgEVMJg)
   * updated version of *Value Semantics and Concepts-based Polymorphism* 
 * Klaus Iglberger: CppCon 2021 ["Breaking Dependencies: Type Erasure - A Design Analysis"](https://youtu.be/4eeESJQk-mw)
 * Klaus Iglberger: CppCon 2022 ["Breaking Dependencies: Type Erasure - The Implementation Details"](https://youtu.be/qn6OqefuH08)
