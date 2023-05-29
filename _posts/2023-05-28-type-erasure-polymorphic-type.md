@@ -178,10 +178,11 @@ you want to try out this type erasure, you can do so in [compiler explorer][8].
 
 * [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
 * [C++ Core Guidelines: Type Erasure with Templates](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure-with-templates)
+* [C++ 'Type Erasure' Explained](https://davekilian.com/cpp-type-erasure.html)
 
 ### Books
 
-* Klaus Iglberger, C++ Software Design - Design Principles and Pattern for High-Quality Software
+* Klaus Iglberger: *C++ Software Design - Design Principles and Pattern for High-Quality Software* (2022)
 
 ### Videos
 
