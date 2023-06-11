@@ -57,7 +57,7 @@ This implementation defines a `STATIC_ASSERT` macro, which takes a condition (`c
 and an indicator for the error message (`msg`). Inside the macro, a `typedef` is 
 created. This `typedef` declares an array with `msg` as its name and a size
 of `0` or `-1`, depending on the condition `cond`. If `cond` is evaluated to 
-true, the array will get a valid size of [0]. However, if the condition is false, 
+true, the array will get a valid size of `0`. However, if the condition is false, 
 the array receives a negative length, which is invalid and will generate a 
 compilation error like this:
 
