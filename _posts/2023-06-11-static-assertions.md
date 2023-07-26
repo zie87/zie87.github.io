@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Static Assertions with Classic C++: Leveraging Compile-Time Checks '
+title: 'Static Assertions with Classic C++: Leveraging Compile-Time Checks'
 date: '2023-06-11 09:59:32'
 categories: ['C++', 'Classic C++']
 tags: ['c++', 'classic', 'history']
