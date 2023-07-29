@@ -9,6 +9,7 @@ tags: ['c++', 'type erasure']
 > This is the first post in a series about type erasures:
 > * [Part1][6]: The Basics
 > * [Part2][7]: A Polymorphic Type
+> * [Part3][8]: A Nonowning Type Erasure
 {: .prompt-info}
 
 We needed to implement a dynamic message dispatching at work some weeks ago. 
@@ -233,3 +234,4 @@ case-specific solutions.
 [5]: https://en.cppreference.com/w/cpp/utility/functional/function
 [6]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
+[8]: {% post_url 2023-07-29-type-erasure-nonowning%}

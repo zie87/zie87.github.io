@@ -9,6 +9,7 @@ tags: ['c++', 'type erasure']
 > This is the second post in a series about type erasures:
 > * [Part1][6]: The Basics
 > * [Part2][7]: A Polymorphic Type
+> * [Part3][9]: A Nonowning Type Erasure
 {: .prompt-info }
 
 In a [previews post][6], I described the type erasures provided by the STL. 
@@ -208,3 +209,4 @@ you want to try out this type erasure, you can do so in [compiler explorer][8].
 [6]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
 [8]: https://godbolt.org/z/z5WbW9Eh3
+[9]: {% post_url 2023-07-29-type-erasure-nonowning%}
