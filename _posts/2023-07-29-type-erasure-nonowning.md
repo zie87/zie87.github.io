@@ -6,16 +6,16 @@ categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
 
+In this post, I want to describe one of my favorite type erasures: a non owning 
+type erasure with manual virtual dispatch. It sounds like quite a mouthful, but in 
+general, it is only some optimization over the polymorphic type, which brings 
+additional advantages.
+
 > This is the third post in a series about type erasures:
 > * [Part1][4]: The Basics
 > * [Part2][5]: A Polymorphic Type
 > * [Part3][6]: A Nonowning Type Erasure
 {: .prompt-info }
-
-In this post, I want to describe one of my favorite type erasures: a non owning 
-type erasure with manual virtual dispatch. It sounds like quite a mouthful, but in 
-general, it is only some optimization over the polymorphic type, which brings 
-additional advantages.
 
 ## The Pattern
 
