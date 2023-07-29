@@ -6,12 +6,6 @@ categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
 
-> This is the second post in a series about type erasures:
-> * [Part1][6]: The Basics
-> * [Part2][7]: A Polymorphic Type
-> * [Part3][9]: A Nonowning Type Erasure
-{: .prompt-info }
-
 In a [previews post][6], I described the type erasures provided by the STL. 
 Most of the time, they are not the best suitable options or the options people 
 consider if you mention type erasures.[^1] The problem is familiar, and many 
@@ -20,6 +14,12 @@ implementation of [`std::any`][1], for example, started with an article from
 Kevlin Henney back in 2000.[^2] In this post, I will describe the type erasure 
 presented by Sean Parent in his famous talk from 2013: 
 [Inheritance is The Base Class of Evil][2]
+
+> This is the second post in a series about type erasures:
+> * [Part1][6]: The Basics
+> * [Part2][7]: A Polymorphic Type
+> * [Part3][9]: A Nonowning Type Erasure
+{: .prompt-info }
 
 ## Polymorphic Types
 

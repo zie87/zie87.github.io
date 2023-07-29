@@ -6,12 +6,6 @@ categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
 ---
 
-> This is the first post in a series about type erasures:
-> * [Part1][6]: The Basics
-> * [Part2][7]: A Polymorphic Type
-> * [Part3][8]: A Nonowning Type Erasure
-{: .prompt-info}
-
 We needed to implement a dynamic message dispatching at work some weeks ago. 
 We had different kinds of messages, which we needed to store in a queue and 
 dispatch to systems. To store the messages, a type erasure was required. But 
@@ -19,6 +13,12 @@ what is a type erasure?
 
 Type Erasure 
 : A technique to enable the use of various concrete types through a single generic interface.[^1]
+
+> This is the first post in a series about type erasures:
+> * [Part1][6]: The Basics
+> * [Part2][7]: A Polymorphic Type
+> * [Part3][8]: A Nonowning Type Erasure
+{: .prompt-info}
 
 ## Inheritance
 
