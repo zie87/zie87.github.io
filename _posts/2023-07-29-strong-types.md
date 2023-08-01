@@ -6,8 +6,6 @@ categories: ['C++']
 tags: ['c++']
 ---
 
-## Introduction
-
 Have you ever asked yourself which unit a function return type has? Does `sleep` 
 use milliseconds or microseconds? Have you ever mixed up the order of your function 
 parameters? If so, **Strong Types** are here to help you prevent this issue from happening again.

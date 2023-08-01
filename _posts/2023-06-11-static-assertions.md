@@ -6,8 +6,6 @@ categories: ['C++', 'Classic C++']
 tags: ['c++', 'classic', 'history']
 ---
 
-## Introduction
-
 If we develop embedded software, we must check static attributes as soon as 
 possible to ensure robust and reliable code. Such checks could be expectations 
 about the size of a pointer or user-defined type. A valuable mechanism to 

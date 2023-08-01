@@ -8,7 +8,7 @@ tags: ['c++', 'type erasure']
 
 In this post, I want to describe one of my favorite type erasures: a non owning 
 type erasure with manual virtual dispatch. It sounds like quite a mouthful, but in 
-general, it is only some optimization over the polymorphic type, which brings 
+general, it is only some optimization over the [polymorphic type][5], which brings 
 additional advantages.
 
 > This is the third post in a series about type erasures:
