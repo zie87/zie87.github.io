@@ -3,7 +3,7 @@ layout: post
 title: 'Type Erasure in C++: The Basics'
 date: '2023-05-21 19:33:37'
 categories: ['C++', 'Type Erasure']
-tags: ['c++', 'type erasure']
+tags: ['c++', 'type erasure', 'functional']
 ---
 
 We needed to implement a dynamic message dispatching at work some weeks ago. 
@@ -204,6 +204,12 @@ combine multiple [`std::function`][5] into a type we can store. If our objects
 are getting bigger, we also need to care about the storage of these objects, 
 especially if they need to be shared between different operations.
 
+If you consider the use of [`std::function`][5] you should remember the 
+description from  Vittorio Romeo: 
+
+> `std::function` is a **heavyweight general-purpose polymorphic function wrapper** 
+> that is meant to **store and “own”** a callable object.[^3]
+
 ## Summary so far
 
 We have looked at the *out of the box* options C++ and the STL provides. 
@@ -226,6 +232,7 @@ case-specific solutions.
 
 [^1]: This definition is based on Rainer Grimms article [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
 [^2]: Most any implementations provide small object optimization, which could avoid the allocation.
+[^3]: This description is from his blog post [passing functions to functions](https://vittorioromeo.info/index/blog/passing_functions_to_functions.html)
 
 [1]: https://en.cppreference.com/w/cpp/utility/any
 [2]: https://www.boost.org/doc/libs/1_82_0/doc/html/any.html
