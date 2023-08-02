@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Type Erasure in C++: Nonowning Type Erasure'
+title: 'Type Erasure in C++: Non-Owning Type Erasure'
 date: '2023-07-29 10:44:30'
 categories: ['C++', 'Type Erasure']
 tags: ['c++', 'type erasure']
