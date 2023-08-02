@@ -153,7 +153,7 @@ dispatch function. The STL also provides an erasure type for this: [`std::functi
 
 With [`std::function`][5], we can accept everything which behaves like a 
 function. This means we can use it if we change the container to store the operation 
-rather than the type:
+rather than the type[^4]:
 
 ```cpp
 #include <functional>
@@ -233,6 +233,7 @@ case-specific solutions.
 [^1]: This definition is based on Rainer Grimms article [C++ Core Guidelines: Type Erasure](https://www.modernescpp.com/index.php/c-core-guidelines-type-erasure)
 [^2]: Most any implementations provide small object optimization, which could avoid the allocation.
 [^3]: This description is from his blog post [passing functions to functions](https://vittorioromeo.info/index/blog/passing_functions_to_functions.html)
+[^4]: You can find the example in compiler explorer: [https://godbolt.org/z/TjcKEPqoM](https://godbolt.org/z/TjcKEPqoM)
 
 [1]: https://en.cppreference.com/w/cpp/utility/any
 [2]: https://www.boost.org/doc/libs/1_82_0/doc/html/any.html
