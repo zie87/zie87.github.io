@@ -15,9 +15,10 @@ Type Erasure
 : A technique to enable the use of various concrete types through a single generic interface.[^1]
 
 > This is the first post in a series about type erasures:
-> * [Part1][6]: The Basics
-> * [Part2][7]: A Polymorphic Type
-> * [Part3][8]: A Nonowning Type Erasure
+> * [Part 1: The Basics][6]
+> * [Part 2: A Polymorphic Type][7]
+> * [Part 3: A Nonowning Type Erasure][8]
+> * [Part 4: A callable reference][9]
 {: .prompt-info}
 
 ## Inheritance
@@ -243,3 +244,4 @@ case-specific solutions.
 [6]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
 [8]: {% post_url 2023-07-29-type-erasure-nonowning%}
+[9]: {% post_url 2023-08-03-type-erasure-function-ref%}

@@ -12,9 +12,10 @@ general, it is only some optimization over the [polymorphic type][5], which brin
 additional advantages.
 
 > This is the third post in a series about type erasures:
-> * [Part1][4]: The Basics
-> * [Part2][5]: A Polymorphic Type
-> * [Part3][6]: A Nonowning Type Erasure
+> * [Part 1: The Basics][4]
+> * [Part 2: A Polymorphic Type][5]
+> * [Part 3: A Nonowning Type Erasure][6]
+> * [Part 4: A callable reference][9]
 {: .prompt-info }
 
 ## The Pattern
@@ -67,7 +68,7 @@ function pointer we can store.
 whose constraints (if any) are satisfied has a **conversion function to pointer 
 to function** with C++ language linkage having the same parameter and return 
 types as the closure type’s function call operator. 
-([C++ Standard Draft N4849](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/n4849.pdf) section *7.5.5.1.7 [expr.prim.lambda.closure]*)
+([C++ Standard Draft N4849](wg21.link//N4849) section *7.5.5.1/7 [expr.prim.lambda.closure]*)
 {: .prompt-info }
 
 The last *trick* is to use the `dispatch_to` free function, that allow us the 
@@ -277,3 +278,4 @@ properly.
 [6]: {% post_url 2023-07-29-type-erasure-nonowning%}
 [7]: https://en.wikipedia.org/wiki/Dependency_injection
 [8]: https://en.wikipedia.org/wiki/Boilerplate_code
+[9]: {% post_url 2023-08-03-type-erasure-function-ref%}

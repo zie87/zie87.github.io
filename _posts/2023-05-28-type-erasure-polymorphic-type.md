@@ -16,9 +16,10 @@ presented by Sean Parent in his famous talk from 2013:
 [Inheritance is The Base Class of Evil][2]
 
 > This is the second post in a series about type erasures:
-> * [Part1][6]: The Basics
-> * [Part2][7]: A Polymorphic Type
-> * [Part3][9]: A Nonowning Type Erasure
+> * [Part 1: The Basics][6]
+> * [Part 2: A Polymorphic Type][7]
+> * [Part 3: A Nonowning Type Erasure][9]
+> * [Part 4: A callable reference][10]
 {: .prompt-info }
 
 ## Polymorphic Types
@@ -210,3 +211,4 @@ you want to try out this type erasure, you can do so in [compiler explorer][8].
 [7]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
 [8]: https://godbolt.org/z/z5WbW9Eh3
 [9]: {% post_url 2023-07-29-type-erasure-nonowning%}
+[10]: {% post_url 2023-08-03-type-erasure-function-ref%}
