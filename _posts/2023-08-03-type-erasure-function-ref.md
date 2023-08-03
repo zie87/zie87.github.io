@@ -231,7 +231,7 @@ toolbox for embedded development.
 [^6]: You can see a benchmark in this blog post: [passing functions to functions][12]
 
 
-[1]: wg21.link/p0792r14
+[1]: https://wg21.link/p0792r14
 [2]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [3]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
 [4]: {% post_url 2023-07-29-type-erasure-nonowning%}
