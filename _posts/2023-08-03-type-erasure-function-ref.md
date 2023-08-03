@@ -225,13 +225,13 @@ toolbox for embedded development.
 
 [^1]: The proposal [P0792][1] provides a good overview over the advantages and disadvantages.
 [^2]: Jason Turner wrote an article about this: [template code bloat](https://articles.emptycrate.com/2008/05/06/nobody_understands_c_part_5_template_code_bloat.html)
-[^3]: `std::move_only_function` will be part of [C++23](https://en.cppreference.com/w/cpp/23) and was proposed in [P0288](wg21.link/p0288r9)
+[^3]: `std::move_only_function` will be part of [C++23](https://en.cppreference.com/w/cpp/23) and was proposed in [P0288](https://wg21.link/p0288r9)
 [^4]: You can find the example in compiler explorer: [https://godbolt.org/z/evorMPo58](https://godbolt.org/z/evorMPo58) 
 [^5]: This implementation is a slightly simplified version of [`llvm::function_ref`][11]
 [^6]: You can see a benchmark in this blog post: [passing functions to functions][12]
 
 
-[1]: wg21.link/p0792r14
+[1]: https://wg21.link/p0792r14
 [2]: {% post_url 2023-05-21-type-erasure-the-basics%}
 [3]: {% post_url 2023-05-28-type-erasure-polymorphic-type%}
 [4]: {% post_url 2023-07-29-type-erasure-nonowning%}

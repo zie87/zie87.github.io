@@ -68,7 +68,7 @@ function pointer we can store.
 whose constraints (if any) are satisfied has a **conversion function to pointer 
 to function** with C++ language linkage having the same parameter and return 
 types as the closure type’s function call operator. 
-([C++ Standard Draft N4849](wg21.link//N4849) section *7.5.5.1/7 [expr.prim.lambda.closure]*)
+([C++ Standard Draft N4849](https://wg21.link//N4849) section *7.5.5.1/7 [expr.prim.lambda.closure]*)
 {: .prompt-info }
 
 The last *trick* is to use the `dispatch_to` free function, that allow us the 
