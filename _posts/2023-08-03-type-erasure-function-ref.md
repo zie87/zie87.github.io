@@ -142,7 +142,8 @@ class function_ref<RETURN_T(ARG_Ts...)> {
 > The provided implementation is only an example and has some serious flaws and 
 > is only to illustrate the idea. If you want use it you should stick to an 
 > already existing implementation like [zhihaoy/nontype_functional@p0792r13.][17]
-> or adapt the implementation. This blog post gives a good overview what you 
+> or adapt the implementation. I described how a complete implementation can be 
+> done in a different [blog post][18]. If you want to do it on your own, this blog post gives a good overview what you 
 > should consider: [Implementing `function_view` is harder than you might think][16]
 {: .prompt-warning }
 
@@ -245,3 +246,4 @@ toolbox for embedded development.
 [12]: https://vittorioromeo.info/index/blog/passing_functions_to_functions.html
 [16]: https://www.foonathan.net/2017/01/function-ref-implementation/
 [17]: https://github.com/zhihaoy/nontype_functional/blob/p0792r13/include/std23/function_ref.h
+[18]: {% post_url 2023-08-05-function-ref%}

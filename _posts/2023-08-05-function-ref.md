@@ -1,19 +1,14 @@
 ---
 layout: post
 title: 'Reinventing the Wheel: function_ref'
-date: '2023-08-03 15:41:35'
+date: '2023-08-05 23:00:35'
 categories: ['C++', 'Reinventing the Wheel']
 tags: ['c++', 'type erasure', 'functional', 'function_ref']
 ---
 
-In a [previous blog post][1] I gave a quick overview about `function_ref`. The 
-implementation provided in this post has some serious flaws. In this post I want 
-to dig into this flaws and create an implementation which is closer to the 
-[`function_ref` proposal (P0792)][2].
+In a [previous blog post][1], I briefly overviewed `function_ref`. The implementation provided has some serious flaws. In the current post, I want to dig into these flaws and create an implementation that is closer to the [`function_ref` proposal (P0792)][2].
 
-> This post describes an implementation of a `function_ref` class step by step. 
-This is quite a long journey, if you want to see the final product upfront you 
-can do so on [compiler explorer][30] and on [cpp insights][31].
+> This post describes an implementation of a `function_ref` class step by step. This journey will be pretty long; if you want to see the final product up front, you can do so on [compiler explorer][30] and [cpp insights][31].
 {: .prompt-info}
 
 ## Design Flaws
@@ -51,11 +46,8 @@ class function_ref<RETURN_T(ARG_Ts...)> {
 };
 ```
 
-This implemention has serveral major flaws. Let us detected the flaws and than 
-start from scratch with a new implementation based on the [standard proposal][2].
-A not up front most of the flaws are already meantioned in a blog post called:
-[Implementing `function_view` is harder than you might think][5], which I would 
-highly recommend to read. 
+This implementation has several significant flaws. Let us detect the defects and start with a new implementation based on the [standard proposal][2].
+***A note up front:*** The blog post [Implementing `function_view` is harder than you might think][5] already mentioned most of the flaws. I recommend reading this post. 
 
 ### function pointers
 
@@ -67,8 +59,8 @@ function_ref<int()> fn(foo);
 ```
 {: .nolineno}
 
-The issue is that we try to store every thing as `void*`, but the cast of a 
-function pointer into a `void*` would not be safe. The standard says about this:
+The issue is that we try to store everything as `void*`, but the cast of a 
+function pointer into a `void*` would not be safe. The standard says this:
 
 > The type of a pointer to cv `void` or a pointer to an object type is called an 
 > ***object pointer*** type. [...] The type of a pointer that can designate a function 
@@ -79,29 +71,22 @@ function pointer into a `void*` would not be safe. The standard says about this:
 > An object of type cv `void*` shall have the same representation and alignment 
 > requirements as cv `char*`. ([C++ Standard Draft N4849][7] section *6.8.2/5 [[basic.compound]]*)
 
-This means `void*` can **only** hold object pointers safely. If we want to store 
-function pointers we need a different storage type. 
+This description means `void*` can **only** hold object pointers safely. If we want to store function pointers, we need a different storage type. 
 
 ### `const` and `noexcept`
 
-A function in C++ can have a cv qualification and an exception specification. 
-If we try it with our implementation we get a compilation error because of 
-incomplete types. 
+A function in C++ can have a cv qualification and an exception specification. If we try it with our implementation, we get a compilation error because of incomplete types. 
 ```cpp
 // compilation error:
 function_ref<int() noexcept> foo([]() noexcept {return 42;});
 ```
 {: .nolineno}
 
-The reason for this is that our [partial template specialization][8] only one 
-kind of signature supports and this signature does not consider this additional 
-qualification/specification. This means we also need to add support for this 
-and consider this information for our member functions.
+This error happens because our [partial template specialization][8] supports only one kind of signature, and this signature does not consider this additional qualification/specification. So we also need to add support for this qualification and evaluate this information for our member functions.
 
-### better support for free and member functions
+### Better support for free and member functions
 
-The use of member functions and free functions is restricted with the current 
-implementation and not user friendly. So code like this is currently not possible: 
+The current implementation restricts the use of member functions and free functions and needs to be more user-friendly. So code like this is currently not possible: 
 
 ```cpp
 struct A {
@@ -114,15 +99,14 @@ function_ref<int()> foo(&A::bar, a);
 ```
 {: .nolineno}
 
-The [standard proposal][2] containes dedicated constructors to provide a better 
-support for this kind of functions, by using `nontype_t`. We should also add 
+The [standard proposal][2] contains dedicated constructors to support these functions better using `nontype_t`. We should also add 
 support for `nontype_t` to provide the same functionality.
 
 ## Implementation Plan
 
-In this blog post we will implement a `function_ref` similar to the [proposal][2].
-We will do this step by step and try to explain the implementation on the way. 
-The API in the end should look like this[^2]:
+This blog post will implement a `function_ref` similar to the [proposal][2].
+We will do this step by step and explain the implementation. 
+The API, in the end, should look like this[^2]:
 
 ```cpp
 template<class... S> class function_ref;    // not defined
@@ -161,10 +145,8 @@ template<auto f>
 ```
 {: .nolineno}
 
-In our journey we will take a lot of insperation from the example 
-implementation: [zhihaoy/nontype_functional@p0792r13][6]. Also when it is not 
-explicit meantioned you can assume that the implementation in this code was 
-checked upfront and could have impacted the implementation.
+> In our journey, we will take a lot of inspiration from the example implementation: [zhihaoy/nontype_functional@p0792r13][6]. Also, when it is not explicitly mentioned, you can assume that I checked the implementation in this code upfront, which will have impacted the implementation.
+{: .prompt-info}
 
 ## Support for *functors*
 
@@ -179,7 +161,7 @@ that overloads one or more function call operators (`operator()`).
 *callable objects*
 : A type for which the [*`INVOKE`*][11] and [*`INVOKE<R>`*][11] operations are applicable.[^3]
 
-So after this we will be able to construct our `function_ref` like this:
+So after this, we will be able to construct our `function_ref` like this:
 
 ```cpp
 struct functor {
@@ -192,9 +174,8 @@ function_ref<int()> fn_ref2([]() {return 17;});
 ```
 {: .nolineno}
 
-For our first implemenation we have a lot of leg work to do so let us dig 
-directly into it. We need to define our class, our constructor and we already 
-need to implement the necessary restriction for our constructor.
+We have a lot of leg work for our first implementation, so let us dig 
+directly into it. We need to define our class and constructor, and we already need to implement the necessary restriction for our constructor.
 
 ### Class declaration
 
@@ -214,7 +195,7 @@ class function_ref<R(ArgTypes...) cv noexcept(noex)> {/*...*/}
 > * *cv* is either `const` or empty.
 > * *noex* is either `true` or `false`.
 
-This would mean we need to support the following specializations:
+So we need to support the following specializations:
 
 ```cpp
 template <typename ... S>
@@ -238,7 +219,7 @@ class function_ref<R(ARG_Ts...) const noexcept> {};
 ```
 {: .nolineno}
 
-To support all four specializations independend form each other would be a lot 
+Supporting all four specializations independently would be a lot 
 of effort. So we need to align the implementation effort. We have multiple 
 possibilities to do so[^4]:
 1. inherit from a common base class
@@ -247,13 +228,9 @@ possibilities to do so[^4]:
 
 #### Inheritance
 
-If we use inheritance to reduce the implementation effort we have a price to 
-pay. We would need public inheritance if want to avoid code duplications, this 
-means we need to take care about the destructor of our base class.[^5] If we 
-need to create a virtual function our class would not be [trivial][13] any more and 
-we could get problems with [the standard layout][14] of our class. Beyond this 
-we could get a suboptimal padding for our `function_ref` class, which would 
-increase to object size.
+We have a price to pay if we use inheritance to reduce the implementation effort. We would need public inheritance to avoid code duplications; this 
+means we need to take care of the destructor of our base class.[^5] If we 
+need to create a virtual function, our class would not be [trivial][13] anymore, and we could get problems with [the standard layout][14] of our class. Beyond this, we could get suboptimal padding for our `function_ref` class, which would increase to object size.
 
 #### Alias
 
@@ -267,19 +244,15 @@ using function_ref = function_ref_base<signatur_t<SIG_T>, is_nothrow_v<SIG_T>, i
 ```
 {: .nolineno}
 
-The good thing about an [alias][15] would be that it does not create any overhead for 
-object and will not change the object layout. This solution has also some 
-serious drawbacks. The most obvious is that we need to break with the 
-[proposed][2] declaration completly. A more serious issue in the usage would 
-be that we would have a different [lookup behaviour][16]. An [alias][15] is not 
-considered for an [argument-dependent lookup][16] this means we can not use it 
-in the same way like we could use it as a class.
+The good thing about an [alias][15] is that it does not create any overhead for the object and will not change its layout. This solution also has some 
+severe drawbacks. The most obvious is that we need to break with the 
+[proposed][2] declaration completely. A more severe issue in the usage would be having a different [lookup behavior][16]. An [alias][15] is not 
+considered for an [argument-dependent lookup][16]; this means we can not use it in the same way as we could use it as a class.
 
 #### Signature Change
 
 The third option to fix the issue would be to change the signature for our 
-implementation. This is the variant which was choosen for the 
-[reference implementation][6]. There the template class declaration looks like:
+implementation. The [reference implementation][6] has chosen this variant. There the template class declaration looks like this:
 
 ```cpp
 template<class Sig, class = typename _qual_fn_sig<Sig>::function>
@@ -290,21 +263,13 @@ class function_ref<Sig, R(Args...)> // freestanding
 ```
 {: .nolineno}
 
-The prototype takes now exact two and not a variable amount of template 
-parameters and the specialization take now the complete function signature as first 
-parameter (including *cv qualifier* and *exception specifiere*) and the function 
-types as the second parameter (return type and parameter list). With both 
-informations available we are able to detect everything necessary for one 
-generic implementation and it would still match most of the expected use cases.
+The prototype now takes exactly two and not a variable amount of template parameters, and the specialization now takes the complete function signature as the first parameter (including *cv qualifier* and *exception specifier*) and the function types as the second parameter (return type and parameter list). With both pieces of information available, we can detect everything necessary for one generic implementation, which would still match most expected use cases.
 
-We will go for the same approach in our implementation, but keep in mind that 
-this is a simplification and we should specialize for all four types.
+We will go for the same approach in our implementation, but remember that this signature change is a simplification; we should specialize for all four types.
 
 #### Implementation
 
-To implement the class declaration we need to implement first a type trait 
-which will extract our function types from the provided signature. To implement 
-this we will simple us [partial template specialization][8]:
+To implement the class declaration, we must first implement a type trait that will extract our function types from the provided signature. To implement this trait, we will use [partial template specialization][8]:
 
 ```cpp
 namespace detail {
@@ -329,9 +294,7 @@ using fn_types_t = typename fn_types<SIG_T>::type;
 ```
 {: .nolineno}
 
-The trait `fn_types` will extract the function types for each provided signature. 
-We also add an [alias][15] `fn_types_t` for convenience. This trait allows us 
-now to implement our class declarations:
+The trait `fn_types` will extract the function types for each provided signature. For convenience, we also add an [alias][15] `fn_types_t`. This trait allows us now to implement our class declarations:
 
 ```cpp
 template <typename SIG_T, typename = detail::fn_types_t<SIG_T>>
@@ -342,10 +305,7 @@ class function_ref<SIG_T, R(ARG_Ts...)> {};
 ```
 {: .nolineno}
 
-If now want to use the class we only need to provide our function signature. 
-This will trigger the default parameter, which will then end up in our template 
-spezialisation. Now we are able to create our `function_ref` objects with 
-exception specifiere and const qualifier:
+We only need to provide our function signature if we want to use the class. The default parameter will be triggered, which will then end up in our template specialization. Now we can create our `function_ref` objects with exception specifier and const qualifier:
 
 ```cpp
 function_ref<int()> fnref;
@@ -355,14 +315,11 @@ function_ref<int() const noexcept> cexfnref;
 ```
 {: .nolineno}
 
-You can see the progress we made so far in  [compiler explorer](https://godbolt.org/z/nxaa7sGcf) 
-or if you want to see more what happens in [cpp insights](https://cppinsights.io/s/c9bb50cd).
+You can see the progress we made so far in  [compiler explorer](https://godbolt.org/z/nxaa7sGcf), or if you want to see more about what happens in [cpp insights](https://cppinsights.io/s/c9bb50cd).
 
 ### The *`noex`* trait
 
-A lot of the implementations in the [proposal][2] are dependend on the exception 
-specifier. To check if our signature is `noexcept` we need to implement an 
-additional type trait:
+Many implementations in the [proposal][2] depend on the exception specifier. To check if our signature is `noexcept`, we need to implement an additional type trait:
 
 ```cpp
 namespace detail {
@@ -387,9 +344,7 @@ inline constexpr bool is_nothrow_fn_v = is_nothrow_fn<SIG_T>::value;
 {: .nolineno}
 
 This trait is specialized for each function qualifier and will be a 
-[`std::true_type`][17] if we are in the `noexcept` context. This information 
-will be used often in the following code so we can store it directly in our 
-class as a private member:
+[`std::true_type`][17] if we are in the `noexcept` context. This information will be used often in the following code so we can store it directly in our class as a private member:
 
 ```cpp
 static constexpr bool noex = detail::is_nothrow_fn_v<SIG_T>;
@@ -398,9 +353,7 @@ static constexpr bool noex = detail::is_nothrow_fn_v<SIG_T>;
 
 ### Storage Type
 
-If we want to implement the constructor for [*callable objects*][10] we also need 
-to store a pointer to the object and to our function call. The [proposal][2] 
-defines this as follows:
+If we want to implement the constructor for [*callable objects*][10], we must also store a pointer to the object and our function call. The [proposal][2] defines this as follows:
 
 > An object of class `function_ref<R(Args...) cv noexcept(noex)>` stores a 
 > pointer to function *`thunk-ptr`* and an object *`bound-entity`*. *`bound-entity`* 
@@ -409,16 +362,10 @@ defines this as follows:
 > to function value. The type of *`thunk-ptr`* is 
 > `R(*)(BoundEntityType, Args&&...) noexcept(noex)`.
 
-This has a little bit to unpack her. At first it defines that our storage type 
-needs to store a pointer to an object value or a pointer to a function value. It 
-also defines that this object (called *`BoundEntityType`*) needs to be 
-[trivially copyable][18]. Addtional it defines how our function pointer 
-(called *`thunk-ptr`*) needs to be defined, we will dig into this pointer later. 
-Let us start with the storage type.
+There is a bit to unpack her. At first, it defines that our storage type 
+needs to store a pointer to an object or function value. It also specifies that this object (called *`BoundEntityType`*) needs to be [trivially copyable][18]. Additionally, it defines how our function pointer (called *`thunk-ptr`*) needs to be declared; we will dig into this pointer later. Let us start with the storage type.
 
-We know that we need to store either a pointer to an object value or a pointer 
-to a function value. This means we need to implement a `variant` or an `union`.
-Currently we only care about objects so we only care that we can extend later 
+We know we need to store either a pointer to an object or a function value. So we must implement a `variant` or `union`.Currently, we only care about objects, so we only care that we can extend later 
 with a function pointer. Now let us define our `union`:
 
 ```cpp
@@ -437,11 +384,7 @@ static_assert(std::is_trivially_copyable_v<bound_entity_type>);
 ```
 {: .nolineno}
 
-This short piece of code defines our storage type for now. It currently only 
-supports the construction via object pointer and the [`static_assert`][19] 
-ensures that we fullfill the object requirements. Now we only need to define 
-our function pointer and add the members to our class. We first add [aliases][15] 
-for our member types[^6] and then we we can simply define our members:
+This short piece of code defines our storage type for now. It currently only supports the construction via object pointer, and the [`static_assert`][19] ensures we fulfill the object requirements. Now we only need to define our function pointer and add the members to our class. We first add [aliases][15] for our member types[^6], and then we can define our members:
 
 ```cpp
 using bound_entity_t = detail::bound_entity_type;
@@ -454,9 +397,7 @@ thunk_ptr_t m_thunk_ptr{nullptr};
 
 ### The *`is-invocable-using`* trait
 
-Be for we can define our constructor we need to take care about one additional 
-property: `is-invocable-using<T...>`. This is defined as a static member 
-template of our class and specified as:
+Be for we can define our constructor, we need to take care of one additional property: `is-invocable-using<T...>`. This property has to be defined as a static member template of our class, and the specification says:
 
 > `template<class... T> static constexpr bool is-invocable-using = see below;`
 >
@@ -482,7 +423,7 @@ inline constexpr bool is_invocable_using_v = is_invocable_using<fn_types_t<SIG_T
 ```
 {: .nolineno}
 
-With this trait in place we now can define it as a member of our class:
+With this trait in place, we can now define it as a member of our class:
 
 ```cpp
 template <typename... T>
@@ -492,8 +433,7 @@ static constexpr bool is_invocable_using = detail::is_invocable_using_v<SIG_T, T
 
 ### Callable Object Construction
 
-Now have everything we need to implement the constructor for [*callable objects*][10].
-The constructor is defined as following:
+Now have everything we need to implement the constructor for [*callable objects*][10]. The constructor definition says:
 
 > `template<class F> constexpr function_ref(F&& f) noexcept;`
 >
@@ -508,8 +448,7 @@ The constructor is defined as following:
 > with the address of a function thunk such that *`thunk(bound-entity, call-args...)`* 
 > is expression-equivalent to `invoke_r<R>(static_cast<cv T&>(f), call-args...)`.
 
-So let us start with the declartion of the constructor. The signature is already 
-given by the [proposal][2]:
+So let us start with the declaration of the constructor. The signature is already given by the [proposal][2]:
 
 ```cpp
 template <typename F, typename T = std::remove_reference_t<F>>
@@ -517,9 +456,7 @@ constexpr function_ref(F&& f) noexcept;
 ```
 {: .nolineno}
 
-The second template parameter is add to reduce the typing effort and be more 
-confirm with the writings of the [proposal][2]. Now we need to add the 
-constraints as a [requires clause][20]. Let us start with the first two restrictions:
+We added the second template parameter to reduce the typing effort and be more conform with the writings of the [proposal][2]. We must add the constraints as a [requires clause][20]. Let us start with the first two restrictions:
 
 ```cpp
 template <typename F, typename T = std::remove_reference_t<F>>
@@ -529,12 +466,7 @@ constexpr function_ref(F&& f) noexcept;
 ```
 {: .nolineno}
 
-The third constrain is a little bit more complex and needs some up front work. It 
-is defined as `is-invocable-using<cv T&>` and *`cv`* is defined as empty or `const` 
-based on the const qualifier of our function signature. This means we need to 
-define a trait to check for the value and to do the type converison for us. This 
-is similiar to what we have done for `nopexcept`. The trait to check for 
-constness look like this:
+The third constraint is slightly more complex and needs some upfront work. The [proposal][2] defines this constraint as `is-invocable-using<cv T&>`. The value for *`cv`* is defined as empty or `const` based on the const qualifier of our function signature. So we need to define a trait to check for the value and to do the type conversion for us. The implementation is similar to what we have done for `noexcept`. The trait to check for constness looks like this:
 
 ```cpp
 namespace detail {
@@ -559,7 +491,7 @@ inline constexpr bool is_const_fn_v = is_const_fn<SIG_T>::value;
 ```
 {: .nolineno}
 
-The conversion simple needs to distinquish between const and not. The 
+The conversion needs to distinguish between const and not. The 
 implementation would look like this:
 
 ```cpp
@@ -580,7 +512,7 @@ using cv_fn_t = typename cv_fn<T, is_const_fn_v<SIG_T>>::type;
 ```
 {: .nolineno}
 
-For convenience we will also add the aliase to our class:
+For convenience, we will also add the [alias][15] to our class:
 
 ```cpp
 template<typename T>
@@ -588,7 +520,7 @@ using cv = typename detail::cv_fn_t<SIG_T, T>;
 ```
 {: .nolineno}
 
-With this in place we can now also define our last constrain:
+With this in place, we can now also define our last constrain:
 
 ```cpp
 template <typename F, typename T = std::remove_reference_t<F>>
@@ -599,25 +531,16 @@ constexpr function_ref(F&& f) noexcept;
 ```
 {: .nolineno}
 
-Now the only thing missing is the initialization of our member variables. Our 
-storage can be Initialized exactly like it is defined via [`std::addressof`][21]:
-`m_bound_entity{std::addressof(f)}`{: .cpp}. The initialization of `m_thunk_ptr` 
-is a little bit more complicated. We need to create a concret lambda expression 
-without capture to store the pointer of the lambda expression in our function 
-pointer. This is the same approach like we used for the [non-owning type erasure][22].
-This is well defined behavior:
+Now the only thing we need to add is the initialization of our member variables. We can initialize our storage precisely like it is defined via [`std::addressof`][21]: `m_bound_entity{std::addressof(f)}`{: .cpp}. The initialization of the`m_thunk_ptr`member is more complicated. We need to create a concrete lambda expression without capture to store the pointer of the lambda expression in our function pointer. This approach is the same as for the [non-owning type erasure][22]. This pointer assignment is well-defined behavior:
 
 > The closure type for a **non-generic** lambda-expression with **no lambda-capture** 
 > whose constraints (if any) are satisfied has a **conversion function to pointer 
 > to function** with C++ language linkage having the same parameter and return 
 > types as the closure type’s function call operator. ([C++ Standard Draft N4849][7] section *7.5.5.1/7 [expr.prim.lambda.closure]*)
 
-This lambda needs to provide the fullfill the signature `R (*)(bound_entity_t, ARG_Ts...) noexcept(noex)`.
-It needs to extracted the object pointer from our storage and than call the 
-call-operator with the provided arguments and return the value if the return 
-type is not `void`.
+This lambda needs to fulfill the signature `R (*)(bound_entity_t, ARG_Ts...) noexcept(noex)`. It must extract the object pointer from our storage, call the call operator with the provided arguments, and return the value if the return type is not `void`.
 
-At first we implement a utility function to extract object pointer from our storage:
+At first, we implement a utility function to extract object pointers from our storage:
 ```cpp
 namespace detail {
 template <typename T>
@@ -628,8 +551,7 @@ constexpr static auto get(bound_entity_type entity) {
 ```
 {: .nolineno}
 
-This function extractes our object pointer and casts it into the expected type. 
-Now we can define our lambda expression:
+This function extracts our object pointer and casts it into the expected type. Now we can define our lambda expression:
 
 ```cpp
 [](bound_entity_t entity, ARG_Ts... args) noexcept(noex) -> R {
@@ -643,10 +565,8 @@ Now we can define our lambda expression:
 ```
 {: .nolineno}
 
-This call makes exactly what we have described. It get's the object pointer as 
-reference, applies the need const qualification (`cv<T>`) and then calls the 
-function in dependency of the return type. With this in place our constructor 
-is now complete: 
+This call makes what we have described. It gets the object pointer as 
+reference applies the needed const qualification (`cv<T>`) and then calls the function in dependency of the return type. With this in place, the constructor is now complete: 
 
 ```cpp
 template <typename F, typename T = std::remove_reference_t<F>>
@@ -667,14 +587,12 @@ constexpr function_ref(F&& f) noexcept
 
 ### Callable Operator
 
-We can already construct `function_ref` objects. but to see if it works we need 
-also the call operator. Luckly this is an easy task. The [proposal][2] describes 
-this operator as follows:
+We can already construct `function_ref` objects. But to see if it works, we also need the call operator. Luckily this is an easy task. The [proposal][2] description for this operator is as follows:
 
 > `R operator()(ArgTypes... args) const noexcept(noex);`
 > ***Effects:*** Equivalent to: `return thunk-ptr(bound-entity, std::forward<ArgTypes>(args)...);`
 
-Let us implement exactly that:
+Let us implement precisely that:
 
 ```cpp
 R operator()(ARG_Ts... args) const noexcept(noex) {
@@ -683,8 +601,7 @@ R operator()(ARG_Ts... args) const noexcept(noex) {
 ```
 {: .nolineno}
 
-And that's it we are now apply to construct and call our `function_ref`. We can 
-test our implementation:
+And that's it. We are now able to construct and call our `function_ref`. We can test our implementation:
 
 ```cpp
 #include <cassert>
@@ -708,16 +625,12 @@ assert((cexfnref() == 17));
 ```
 {: .nolineno}
 
-Now we are able to do everything the [*quick and dirty* implementation][1] can do, 
-but in a well more defined manner. If you want to look at the implementation so far 
-you can see it in [cpp insight](https://cppinsights.io/s/905b784b) or in 
-[compiler explorer](https://godbolt.org/z/K1KzWqKs1).
+Now we can do everything the [*quick and dirty* implementation][1] could do but in a more defined manner. If you want to look at the implementation we have done so far, you can see it in [cpp insight](https://cppinsights.io/s/905b784b) or [compiler explorer](https://godbolt.org/z/K1KzWqKs1).
 
 
 ## Support for *const functors*
 
-The hardest parts are now behind us. But our current implementation still has a 
-flaw: we can not handle const functors. If try code as the following:
+The hardest parts are now behind us. But our current implementation still needs to improve: we can not handle const functors. If we try to construct with const as the following code:
 
 ```cpp
 const functor cfun{};
@@ -729,10 +642,7 @@ assert((cexfnref() == 17));
 ```
 {: .nolineno}
 
-The compiler will complain about an invalid conversion between `const void*` and 
-`void*`. To fix this issue we need to extend our `bound_entity_type` with support 
-for const pointers. To do so we need to add an additional represenation for 
-`const void*` to our `union` and add the matching constructor.
+The compiler will complain about an invalid conversion between `const void*` and `void*`. To fix this issue, we need to extend our `bound_entity_type` with support for const pointers. To do so, we need to add a representation for `const void*` to our `union` and add the matching constructor.
 
 ```cpp
 union bound_entity_type {
@@ -748,8 +658,7 @@ union bound_entity_type {
 ```
 {: .nolineno}
 
-As last step we also need to extend our `get` utility function to return the 
-right pointer if a const object is requested:
+As the last step, we also need to extend our `get` utility function to return the right pointer if a const object is requested:
 
 ```cpp
 template <typename T>
@@ -763,15 +672,11 @@ constexpr static auto get(bound_entity_type entity) {
 ```
 {: .nolineno}
 
-Now we support also *const functors*. If you want to see the code for this part 
-here are the links: [cpp insights](https://cppinsights.io/s/0b116486), 
-[compiler explorer](https://godbolt.org/z/5Kxfn1zqq).
+Now we also support *const functors*. If you want to see the code for this part, here are the links: [cpp insights](https://cppinsights.io/s/0b116486), [compiler explorer](https://godbolt.org/z/5Kxfn1zqq).
 
 ## Support for pointers to functions
 
-The next step is to add support for pointers to functions. This will be a piece 
-of cake, compared to what we already have archived. The constructor we are 
-interested in is defined as:
+The next step is to add support for pointers to functions. This implementation will be a piece of cake compared to what we already have archived. The definition for the constructor we are interested in is as follows:
 
 > `template<class F> function_ref(F* f) noexcept;`
 >
@@ -785,10 +690,7 @@ interested in is defined as:
 > address of a function *`thunk`* such that *`thunk(bound-entity, call-args...)`* 
 > is expression-equivalent to `invoke_r<R>(f, call-args...)`.
 
-Most what we need to support this is already in place we only need to extend 
-again our storage type and simply implement the constructor. If we want to store 
-a function pointer we need to define a proper storage type for it. The standard 
-says following about function pointers:
+Most of what we need to support this is already in place. We only need to extend our storage type again and implement the constructor. If we want to store a function pointer, we must define a proper storage type. The standard says the following about function pointers:
 
 > A function pointer **can be explicitly converted to a function pointer of a 
 > different type**. [...] Except that **converting** a prvalue of type “pointer to T1” 
@@ -803,8 +705,7 @@ Or [C++ reference][23] pharses it like:
 > undefined, but **converting such pointer back** to pointer to the original function 
 > type **yields the pointer to the original function**.
 
-This means any function pointer type will do and we can use a type as simple 
-as `void(*)()`. Let us add this type to our `union`: 
+Based on these definitions, any function pointer type will do, and we can use a type as simple as `void(*)()`. Let us add this type to our `union`: 
 
 ```cpp
 union bound_entity_type {
@@ -820,12 +721,10 @@ union bound_entity_type {
 ```
 {: .nolineno}
 
-We added the pointer type as `fn_ptr` to the internal representations and also 
-added a dedicated constructor which is specialized for function types. To store 
-the pointer in the constructor we use an [`reinterpret_cast`][23] to the type 
-of `fn_ptr` to benefit of the conversion garantee for function pointers. 
+We added the pointer type as `fn_ptr` to the internal representations and a dedicated constructor specialized for function types. To store 
+the pointer in the constructor, we use an [`reinterpret_cast`][23] to the type of `fn_ptr` to benefit from the conversion guarantee for function pointers. 
 
-Next we add support for the function pointer to our `get` template function:
+Next, we add support for the function pointer to our `get` template function:
 
 ```cpp
 template <typename T>
@@ -841,8 +740,7 @@ constexpr static auto get(bound_entity_type entity) {
 ```
 {: .nolineno}
 
-Now our storage is prepared, only the implementation of the constructor needs 
-to be done. The implementation is straightforward:
+Now our storage is prepared. Next, we only need to implement the constructor. The implementation is straightforward:
 
 ```cpp
 template <typename F>
@@ -862,15 +760,12 @@ function_ref(F* f) noexcept
 ```
 {: .nolineno}
 
-We define the [requires clause][20] exactly like they are defined in the 
-[proposal][2]. The member initialization is nearly the same like for our 
-function objects. The only difference is that we handle already with the right 
-type so we do not need any thing *special* like `std::addressof` or *`cv`*. The last 
-thing missing is the precondition. Because [`contracts`](https://wg21.link/p0542) 
-didn't make it in the standard yet we will simply use an assert for that: 
-`assert(f != nullptr)`.[^7]
+We define the [requires clause][20] exactly like in the 
+[proposal][2]. The member initialization is nearly the same as for our 
+function objects. The only difference is that we already handle the right 
+type, so we do not need anything *special* like `std::addressof` or *`cv`*. The last thing we need to add is the precondition. Because [`contracts`](https://wg21.link/p0542) didn't make it in the standard yet, we will use an assert for that: `assert(f != nullptr)`.[^7]
 
-And that's it now we should be apply to handle function pointers:
+And that's it. Now we can handle function pointers:
 
 ```cpp
 bool free_function1([[maybe_unused]] char) { return false; }
@@ -884,18 +779,13 @@ assert(ff2() == 3);
 ```
 {: .nolineno}
 
-The code for this section can be found under this links: 
+You will find the code for this section under these links: 
 [cpp insights](https://cppinsights.io/s/50561907), 
 [compiler explorer](https://godbolt.org/z/b8n8h7bcx)
 
 ## Support for member methods and the `nontype<T>`
 
-If we read the [proposal][2] we find in the *Wording* section the introduction 
-of the tag type[^8] called `nontype`. This tag type is a ***generic non-type 
-template object***. This means it will be instantiate with a value known at 
-compile time of any type which can be used as a [non-type template argument][25]. 
-To archive this it uses a the `auto` placeholder for non-types[^9]. Let us look 
-at the implementation of `nontype` and then see what we can do with this:
+If we read the [proposal][2], we find in the *Wording* section the introduction of the tag type[^8] called `nontype`. This tag type is a ***generic non-type template object***. So it will be instantiated with a value known at compile time of any type, which can be used as a [non-type template argument][25]. To archive this, it uses the `auto` placeholder for non-types[^9]. Let us look at the implementation of `nontype` and then see what we can do with this:
 
 ```cpp
 template <auto V>
@@ -908,9 +798,7 @@ constexpr nontype_t<V> nontype{};
 ```
 {: .nolineno}
 
-That is the complete implementation, but what can we do with this? The answer 
-is simple we can inject additional information at compile time and can do tag 
-dispatching. Let us look at an example:
+That is the complete implementation, but what can we do with this? The answer is simple, we can inject additional information at compile time and can do tag dispatching. Let us look at an example:
 
 ```cpp
 template <std::integral T>
@@ -924,13 +812,7 @@ assert(val == 42);
 ```
 {: .nolineno}
 
-In this example we call a function pointer provided by the `nontype_t` parameter.
-The object construction `nontype<generic_fn<int>>` defines the template parameter 
-for our `nontype` as the address of `generic_fn<int>` with the type `int(*)()`. 
-This means inside the function `non_type_call` we can use the function pointer 
-`fn_ptr` provide as a template parameter and directly calls it and returns the 
-value. You can see in [cpp insights](https://cppinsights.io/s/0f29c9a6) what's 
-going on:
+In this example, we call a function pointer provided by the `nontype_t` parameter. The object construction `nontype<generic_fn<int>>` defines the template parameter for our `nontype` as the address of `generic_fn<int>` with the type `int(*)()`. So inside the function `non_type_call`, we use the function pointer (`fn_ptr`), provided as a template parameter, directly call it, and return the value. You can see in [cpp insights](https://cppinsights.io/s/0f29c9a6) what's going on:
 
 ```cpp
 template<>
@@ -945,10 +827,8 @@ const int val = non_type_call(nontype_t<&generic_fn>(nontype<&generic_fn>));
 ```
 {: .nolineno}
 
-From this representation you can see that our implementation creates nothing 
-more then an indirection to `generic_fn`.  Function pointers as non-type template 
-parameters is a nice old trick, that was used in the past to archive great 
-performance for implementations like the [impossible fast delegate][26].
+This representation shows that our implementation creates nothing 
+more than an indirection to `generic_fn`. Function pointers as non-type template parameters are a lovely old trick, which in the past archived outstanding performances in implementations like the [impossible fast delegate][26].
 
 ### Constructor for `nontype`
 
@@ -968,8 +848,7 @@ We can integrate this trick also in our `function_ref` implementation. The
 > such that *`thunk(bound-entity, call-args...)`* is expression-equivalent to 
 > `invoke_r<R>(f, call-args...)`.
 
-Let us directly stort the implemenation. The declaration and the [requires clause][20] 
-are straightforward and can be don exactly like it is defined:
+Let us start directly with the implementation. The declaration and the [requires clause][20] are straightforward; we can nearly directly use the [proposal][2] code:
 
 ```cpp
 template <auto f>
@@ -978,10 +857,7 @@ constexpr function_ref(nontype_t<f>) noexcept;
 ```
 {: .nolineno}
 
-The initialization is also quite easy. We do not need to store any pointer so we 
-can use the default constructor for `m_bound_entity`. The only thing left is our 
-lambda definition. Her we need to call the via `nontype` provided function 
-pointer. The implemenation looks like this:
+The initialization is also relatively easy. We do not need to store any pointer, and we can use the default constructor for `m_bound_entity`. The only thing left is our lambda definition. Here we need to call the function pointer provided via `nontype`. The implementation looks like this:
 
 ```cpp
 [](bound_entity_t entity, ARG_Ts... args) noexcept(noex) -> R {
@@ -994,8 +870,8 @@ pointer. The implemenation looks like this:
 ```
 {: .nolineno}
 
-The only thing what is missing is the *mandate* and we can simply enforce this 
-via [`constexpr if`][27] and [`static_assert`][28]. If we but everything 
+The only thing that is missing is the *mandate* and we can enforce this 
+via [`constexpr if`][27] and [`static_assert`][28]. If we put everything 
 together our constructor looks like this:
 
 ```cpp
@@ -1020,8 +896,7 @@ constexpr function_ref(nontype_t<f>) noexcept
 ```
 {: .nolineno}
 
-This allows us now to use out `function_ref` with a `nontype` like in the 
-`non_type_call` of the example earlier. So we can use it like this:
+This constructor allows us now to use our `function_ref` with a `nontype` like in the `non_type_call` of the example earlier. So we can use it like this:
 
 ```cpp
 function_ref<int()> nfn{nontype<generic_fn<int>>};
@@ -1029,23 +904,15 @@ assert(nfn() == 42);
 ```
 {: .nolineno}
 
-And that is all which need to be done to support a `nontype` object. As usual 
-the source code for this step can be found on [compiler explorer](https://godbolt.org/z/sWGojGzEo) 
-and [cpp insights](https://cppinsights.io/s/0d0c0702). But maybe you ask yourself 
-why you should use `nontype` and not the constructor for the function pointer. 
-This can be answered: `nontype` could be (slightly) faster, but mostly it will 
-end up in the same assemble code. If you want to check both version out you can 
-do so with [Quick C++ Bench](https://quick-bench.com/q/ffjch8vmQY4rMcYphlYDx_Es3EQ).
+Now all is done to support a `nontype` object. As usual, the source code is available on [compiler explorer](https://godbolt.org/z/sWGojGzEo) and [cpp insights](https://cppinsights.io/s/0d0c0702). 
 
-But most interessting thing about this implementation is that the storage will 
-not be used for the `nontype` overload. This means we have the possiblity to 
-store additional information.
+Maybe you ask yourself why you should use `nontype` and not the constructor for the function pointer. The answer is `nontype` could be (slightly) faster, but mostly it will end up in the same assemble code. To check both versions, you can do so with [Quick C++ Bench](https://quick-bench.com/q/ffjch8vmQY4rMcYphlYDx_Es3EQ).
+
+But the most exciting thing about this implementation is that the storage is unused for the `nontype` overload. So we can store additional information.
 
 ### Construction with member function pointers
 
-If we use `nontype` to transfere the function address we can use our storage 
-to store the address to an object. This allows us to do calls to member function.
-Let us look how you can do invoke member methods:
+If we use `nontype` to transfer the function address, we can use our storage to store the address to an object. This approach allows us to do calls to member functions. Let us look at how you can invoke member methods:
 
 ```cpp
 struct my_class {
@@ -1061,11 +928,7 @@ assert(std::invoke(&my_class::fn2, c_obj) == 17);
 ```
 {: .nolineno}
 
-In this example we invoke the member methode by calling [`std::invoke`][29] 
-with a reference to an object as the first parameter. If we store a pointer to 
-this object in our `m_bound_entity` storage we can make the same call with 
-[`std::invoke`][29]. To do so we need to implement an additional constructor, 
-which is [propsed][2] like:
+In this example, we invoke the member method by calling [`std::invoke`][29] with a reference to an object as the first parameter. If we store a pointer to this object in our `m_bound_entity` storage, we can make the same call with [`std::invoke`][29]. To do so, we need to implement an additional constructor, which is [propsed][2] like:
 
 > `template<auto f, class U> constexpr function_ref(nontype_t<f>, U&& obj) noexcept;`
 > 
@@ -1081,8 +944,7 @@ which is [propsed][2] like:
 > with the address of a function *`thunk`* such that *`thunk(bound-entity, call-args...)`* 
 > is expression-equivalent to `invoke_r<R>(f, static_cast<cv T&>(obj), call-args...)`.
 
-The implementation of this feels like a hybrid between the *functor* and the 
-`nontype` constructor. We start as usual with the declaration and the 
+Implementing this feels like a hybrid between the *functor* and the `nontype` constructor. We start as usual with the declaration and the 
 [require clause][20]:
 
 ```cpp
@@ -1093,12 +955,7 @@ constexpr function_ref(nontype_t<f>, U&& obj) noexcept;
 ```
 {: .nolineno}
 
-The first *mandate* checks, that nobody gives us accidentally a temporary object, 
-the rest of the declaration is similar to the othwer constructors we have 
-already done. The member initialization is also straightforward. The storage 
-will be initialized with the address of `obj` and our lambda needs only to 
-combine the address of the `nontype` with the `obj` stored in our 
-`bound_entity_type`. With all in place the constructor looks like this:
+The first *mandate* checks that nobody accidentally gives us a temporary object. The rest of the declaration is similar to the other constructors we have already done. The member initialization is also straightforward. We initialized the storage with the address of `obj`, and our lambda needs only to combine the address of the `nontype` with the `obj` stored in our `bound_entity_type`. With all in place, the constructor looks like this:
 
 ```cpp
 template <auto f, typename U, typename T = std::remove_reference_t<U>>
@@ -1124,8 +981,7 @@ constexpr function_ref(nontype_t<f>, U&& obj) noexcept
 ```
 {: .nolineno}
 
-After the implementation of this constructor overload we can now also create 
-a `function_ref` with member methodes:
+After the implementation of this constructor overload, we can now also create a `function_ref` with member methods:
 
 ```cpp
 my_class obj{};
@@ -1138,8 +994,7 @@ assert(mfn2() == 17);
 ```
 {: .nolineno}
 
-But we can do more. This constructor is not restricted to pointers of member 
-methods. We can also bind values to functions:
+But we can do more. This constructor is not restricted to pointers of member methods. We can also bind values to functions:
 
 ```cpp
 int free_function3(int val) noexcept { return val; }
@@ -1150,16 +1005,11 @@ assert(ffn() == val);
 ```
 {: .nolineno}
 
-In this example we bind `val` to `free_function3`, which allows us to call our 
-`function_ref` without any parameters. If you want to play around to find out 
-what else you can do with this constructor you can do so on 
-[compiler explorer](https://godbolt.org/z/cd9bc8GjY) or 
-[cpp insights](https://cppinsights.io/s/42eebae4).
+In this example, we bind `val` to `free_function3`, which allows us to call our `function_ref` without any parameters. If you want to play around to find out what else you can do with this constructor, you can do so in [compiler explorer](https://godbolt.org/z/cd9bc8GjY) or [cpp insights](https://cppinsights.io/s/42eebae4).
 
-### Construction with an addtional object pointer
+### Construction with an additional object pointer
 
-There is only one constructor left to implement. This constructor is defined as 
-following:
+There is only one constructor left to implement. The constructor's definition is as follows:
 
 > `template<auto f, class T> constexpr function_ref(nontype_t<f>, cv T* obj) noexcept;`
 > 
@@ -1176,8 +1026,7 @@ following:
 > of a function *`thunk`* such that *`thunk(bound-entity, call-args...)`* is 
 > expression-equivalent to `invoke_r<R>(f, obj, call-args...)`.
 
-This is nearly the same like the previous constructor only that we act on a 
-pointer directly. The implementation looks like:
+This description is nearly identical to the previous constructor, only that we act directly on a pointer. The implementation looks like this:
 
 ```cpp
 template <auto f, typename T>
@@ -1205,8 +1054,7 @@ constexpr function_ref(nontype_t<f>, cv<T>* obj) noexcept
 ```
 {: .nolineno}
 
-Now let us test our new constructor. To use it we only need to provide an 
-additional pointer to our `function_ref` construction:
+Now let us test our new constructor. To use it, we only need to provide an additional pointer to our `function_ref` construction:
 
 ```cpp
 struct data {
@@ -1222,14 +1070,8 @@ assert(pfn() == 182);
 {: .nolineno}
 
 
-But if we try this code we get a compilation error, because the compiler can 
-not deduct `T` from `cv<T>*`. The issue is created by our trait `cv_fn`. In 
-this trait we define the constness and deduct the right type according to this 
-information and the provide `T` in one step. This seems to be to much for the 
-compiler here so we need to change our implementation for this trait. Let us 
-introduce a new type trait called `cv_qualifier`. The difference will now be 
-that we deduct the type in to steps. 
-1. define the right specialisation for the template based on the signature `SIG_T`
+But if we try this code, we get a compilation error because the compiler can not deduct `T` from `cv<T>*`. Our trait `cv_fn` creates the issue. In this trait, we define the constness, deduct the right type according to this information, and provide `T` in one step. To do this in one stage is too much for the compiler here, so we need to change our implementation for this trait. Let us introduce a new type trait called `cv_qualifier`. The difference will now be that we deduct the type in two steps. 
+1. define the right specialization for the template based on the signature `SIG_T`
 2. define the right type based on a provided `T`
 
 The implementation looks like this:
@@ -1250,8 +1092,7 @@ struct cv_qualifier<SIG_T, false> {
 ```
 {: .nolineno}
 
-Now we need to use our new `cv_qualifier` trait instead of `cv_fn_t` inside 
-our `function_ref` class. To do so we need to replace: 
+We must use our new `cv_qualifier` trait instead of `cv_fn_t` inside our `function_ref` class. To do so, we need to replace: 
 
 ```cpp
 template <typename T>
@@ -1269,16 +1110,11 @@ using cv = cv_qualifier::template cv<T>;
 ```
 {: .nolineno}
 
-Now everthing builds and behaves like it should be. And with this in place we 
-now have every constructor of the [proposal][2] implemented. You can look at 
-what we have archived on [compiler explorer](https://godbolt.org/z/94nbbqeeP) or 
-[cpp insights](https://cppinsights.io/s/1f28b8ea).
+Now everything builds and behaves as it should. And with this in place, we now have every constructor of the [proposal][2] implemented. You can look at what we have archived on [compiler explorer](https://godbolt.org/z/94nbbqeeP) or [cpp insights](https://cppinsights.io/s/1f28b8ea).
 
 ## Final Touch
 
-The finish the class implementation only some small final touches are missing. 
-At first we need to delete `template<class T> function_ref& operator=(T)` this 
-is defined as:
+Only some small final touches still need to be added to finish the class implementation. At first we need to delete `template<class T> function_ref& operator=(T)` this is defined as:
 
 > `template<class T> function_ref& operator=(T) = delete;`
 > 
@@ -1287,8 +1123,7 @@ is defined as:
 > * `is_pointer_v<T>` is `false`, and
 > * `T` is not a specialization of `nontype_t`
 
-The only constrain we currently can not detect is the check for `nontype_t` so 
-let us add trait to detect this: 
+We can not implement the constraint for the `nontype_t` detection yet. So let us add a trait to detect `nontype`: 
 
 ```cpp
 namespace detail {
@@ -1304,7 +1139,7 @@ inline constexpr bool is_nontype_v = is_nontype<T>::value;
 ```
 {: .nolineno}
 
-Now we can delete the assignement operator:
+Now we can delete the assignment operator:
 
 ```cpp
 template <typename T>
@@ -1314,9 +1149,7 @@ function_ref& operator=(T) = delete;
 ```
 {: .nolineno}
 
-So this does not touch our own assignement operator so we still fullfill 
-`std::is_trivially_assignable`, but we can default our copy and assignement 
-like the [proposal][2] list. We simple need to add this two lines to our class:
+So this does not touch the assignment operator for `function_ref`, so we still fulfill `std::is_trivially_assignable`, but we can default our copy and assignment like the [proposal][2] list. We need to add these two lines to our class:
 
 ```cpp
 constexpr function_ref(const function_ref&) noexcept = default;
@@ -1324,19 +1157,13 @@ constexpr function_ref& operator=(const function_ref&) noexcept = default;
 ```
 {: .nolineno}
 
-And now our class acts exactly like it was proposed. The complete implementation 
-is on [compiler explorer][30] and on [cpp insights][31] available. 
+And now our class acts like it was proposed. The complete implementation is on [compiler explorer][30] and on [cpp insights][31] available. 
 
 ## Summary
 
-In this post we have implement a complate `function_ref` class based on the 
-proposal: [`function_ref: a type-erased callable reference`][2] and addressed 
-the flaws in the [previous implementation][1]. The only things which are now 
-still missing are the [template deduction guides][32], but they will be 
-addressed later.
+In this post, we have implemented a complete `function_ref` class based on the proposal: [`function_ref: a type-erased callable reference`][2] and addressed the flaws in the [previous implementation][1]. We only need to add the [template deduction guides][32], but we will address them later.
 
-To sum it up: The implementation of a `function_ref` class is for sure harder 
-then it seems, but is it still doable and a good exercise to do.
+**To sum it up:** Implementing a `function_ref` class is more complex than it seems, but it is still doable and a good exercise.
 
 ## References
 
@@ -1358,14 +1185,14 @@ then it seems, but is it still doable and a good exercise to do.
 ## Footnotes
 
 [^1]: You can find the example in compiler explorer: [https://godbolt.org/z/saobbPhPz](https://godbolt.org/z/saobbPhPz) 
-[^2]: In this post we will focus on revision 14 of [P0792][2]
+[^2]: In this post, we will focus on revision 14 of [P0792][2]
 [^3]: This definition is from [C++ reference][10]
-[^4]: Macros would also be an option, but I'm not willing to implement it, because it is way to "ugly".
-[^5]: To avoid [object slicing][12] the base class needs to have a virtual or protected destructor.
-[^6]: We add also an [alias][15] for `bound_entity_type`, because we maybe will move it in a different scope later.
-[^7]: We could also add *contracts lite* by using the [GSL](https://github.com/microsoft/GSL) which would also give us access to `not_null<T>`, but this is out of scope for this post.
-[^8]: If you want to know more about tag types and tag dispatching I recommend: [How to Use Tag Dispatching In Your Code Effectively](https://www.fluentcpp.com/2018/04/27/tag-dispatching/)
-[^9]: The `auto` placeholder was introduced with C++17. If you want to know more about this you can read the proposal: [P0127 Declaring non-type template parameters with `auto`][24]
+[^4]: Macros would also be an option, but I'm unwilling to implement them because they are way too "ugly".
+[^5]: To avoid [object slicing][12], the base class needs to have a virtual or protected destructor.
+[^6]: We also add an [alias][15] for `bound_entity_type` because we maybe will move it to a different scope later.
+[^7]: We could also add *contracts lite* by using the [GSL](https://github.com/microsoft/GSL), which would also give us access to `not_null<T>`, but this is out of scope for this post.
+[^8]: If you want to know more about tag types and tag dispatching, I recommend: [How to Use Tag Dispatching In Your Code Effectively](https://www.fluentcpp.com/2018/04/27/tag-dispatching/)
+[^9]: The `auto` placeholder was introduced with C++17. If you want to know more about this, you can read the proposal: [P0127 Declaring non-type template parameters with `auto`][24]
 
 [1]: {% post_url 2023-08-03-type-erasure-function-ref%}
 [2]: https://wg21.link/p0792r14
