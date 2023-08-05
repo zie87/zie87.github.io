@@ -3,7 +3,7 @@ layout: post
 title: 'Reinventing the Wheel: Type Sequences'
 date: '2023-05-27 17:29:39'
 categories: ['C++', 'Reinventing the Wheel']
-tags: ['c++', 'type traits', 'meta programming']
+tags: ['c++', 'type traits', 'meta programming', 'type sequence']
 ---
 
 I needed to implement a type list three times today. On three different 
@@ -644,7 +644,7 @@ you want to try the complete code, you can do so in [compiler explorer][12].
 * Marius Bancila: *Template Metaprogramming with C++* (2022)
 
 ## Footnotes
-[^1]: [Boost::MPL][3] for examples provides list, vector, queue, and map types
+[^1]: [Boost::MPL][3] for example provides list, vector, queue, and map types
 [^2]: Such libraries are for example [Boost::Mp11][4] or [Brigand][5]
 
 [1]: https://godbolt.org/
