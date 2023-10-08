@@ -19,6 +19,15 @@
   - [ ] [Github Code](https://github.com/QuantumLeaps/modern-embedded-programming-course)
 - [ ] [Blog: Putting Code of Files into Special Section with the GNU Linker](https://mcuoneclipse.com/2014/10/06/putting-code-of-files-into-special-section-with-the-gnu-linker/)
 - [ ] [Blog: Hello world for bare metal ARM using QEMU](https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/)
+- [ ] [Blog: Introduction to Bare-metal Programming for Arduino](https://maker.pro/arduino/tutorial/introduction-to-bare-metal-programming-for-arduino)
+
+## Testing
+
+- [ ] [Blog: Testing Tips](https://testing-tips.sarvendev.com/#/)
+- [ ] [Blog: Cucumber vs Robot Framework](https://medium.com/@ikurtulan97/cucumber-vs-robot-framework-a43e68408dcf)
+- [ ] [Robot Framework](https://robotframework.org/)
+- [ ] [Cucumber.io](https://cucumber.io/)
+- [ ] [Code: Cucumber-CPP](https://github.com/cucumber/cucumber-cpp)
 
 ## Threading 
 
@@ -33,7 +42,8 @@
 - [ ] [Blog: Introduction to fibers in c++](https://www.romange.com/2018/12/15/introduction-to-fibers-in-c-/)
 
 ## Papers
-
+- [ ] C++ Drafts
+  - [ ] [WebView](https://eel.is/c++draft/)
 - [ ] Contracts 
   - [ ] [A Contract Design](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf)
   - [ ] [Support for contract based programming in C++](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0542r5.html)
@@ -48,11 +58,24 @@
 - [ ] [`static_vector`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p0843r6.html)
 - [ ] [`std::is_trivially_relocatable`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p1144r8.html)
 - [ ] [noncopyable and nonmovable utility classes](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2895r0.html)
+- [x] [Declaring non-type template parameters with auto](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0127r2.html)
+- [ ] [`copyable_function`](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2548r1.pdf)
+- [ ] [make `function_ref` more functional](https://www.open-std.org/JTC1/SC22/WG21/docs/papers/2022/p2472r2.html)
+- [ ] Pattern Matching
+  - [ ] [Pattern Matching](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p1371r3.pdf)
+  - [ ] [Code: MPark.Patterns](https://github.com/mpark/patterns)
+  - [ ] [Pattern matching using is and as](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2392r0.pdf)
+  - [ ] [Open Pattern Matching for C++](https://www.stroustrup.com/OpenPatternMatching.pdf)
+  - [ ] [Code: Mach7](https://github.com/solodon4/Mach7)
+  - [ ] [Code: match(it)](https://github.com/BowenFu/matchit.cpp)
+- [ ] [A strstream replacement using `span<charT>` as buffer](https://wg21.link/p0448)
 
 ## Libraries & Code
 
 - [ ] [libfixmath](https://code.google.com/archive/p/libfixmath/)
-- [ ] [embxx: embedded c++ library](https://github.com/arobenko/embxx)
+- [ ] [embxx: embedded c++ library](https://github.com/arobenko/embxx) ([rpi example](https://github.com/arobenko/embxx_on_rpi))
+- [ ] [MS GSL](https://github.com/microsoft/GSL)
+- [ ] [WG21-SG14: container](https://github.com/WG21-SG14/SG14)
 
 ### template libraries
 - [ ] [etl: Embedded Template Library](https://github.com/ETLCPP/etl)
@@ -67,6 +90,9 @@
   - [ ] [byte-lite](https://github.com/martinmoene/byte-lite)
   - [ ] [clamp](https://github.com/martinmoene/clamp)
 - [ ] [Boost](https://www.boost.org/)
+  - [ ] [core](https://github.com/boostorg/core)
+  - [ ] [type_traits](https://github.com/boostorg/type_traits)
+  - [ ] [iterator](https://github.com/boostorg/iterator)
   - [ ] [chrono](https://github.com/boostorg/chrono)
 
 ### stl implementations
@@ -85,6 +111,7 @@
   - [ ] [Blog: Threads](https://micro-os-plus.github.io/user-manual/threads/)
 - [ ] [Nucleus SE](https://github.com/colin-walls/NUSE) ([fork](https://github.com/zie87/NUSE))
 - [ ] [arm mbed os](https://github.com/ARMmbed/mbed-os)
+- [ ] [C++OS](https://gitlab.com/cppos1/cppos/)
 
 ### arinc653
 
