@@ -3,7 +3,7 @@ layout: post
 title: 'Type Erasure in C++: A callable reference'
 date: '2023-08-03 12:47:00'
 categories: ['C++', 'Type Erasure']
-tags: ['c++', 'type erasure', 'functional', 'function_ref']
+tags: ['c++', 'type erasure', 'functional', 'function_ref', 'proposal', 'P0792']
 ---
 
 I regularly need to pass functions or callables around in my daily work. 
