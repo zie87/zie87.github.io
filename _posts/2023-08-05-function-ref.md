@@ -3,7 +3,7 @@ layout: post
 title: 'Reinventing the Wheel: function_ref'
 date: '2023-08-05 23:00:35'
 categories: ['C++', 'Reinventing the Wheel']
-tags: ['c++', 'type erasure', 'functional', 'function_ref']
+tags: ['c++', 'type erasure', 'functional', 'function_ref', 'proposal', 'P0792']
 ---
 
 In a [previous blog post][1], I briefly overviewed `function_ref`. The implementation provided has some serious flaws. In the current post, I want to dig into these flaws and create an implementation that is closer to the [`function_ref` proposal (P0792)][2].
