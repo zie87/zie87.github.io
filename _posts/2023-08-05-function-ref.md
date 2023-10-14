@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Reinventing the Wheel: function_ref'
+title: 'Reinventing the Wheel: Function Reference'
 date: '2023-08-05 23:00:35'
 categories: ['C++', 'Reinventing the Wheel']
 tags: ['c++', 'type erasure', 'functional', 'function_ref', 'proposal', 'P0792']
