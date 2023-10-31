@@ -3,7 +3,7 @@ layout: 'post'
 title: 'Baremetal Arduino: Setting up a development enviroment'
 date: '2023-10-31 13:00:00'
 categories: ['Embedded', 'Baremetal Arduino']
-tags: ['arduino', 'arduino uno', 'arduino nano', 'arduino mega', 'atmel', 'embedded', 'meson', 'docker']
+tags: ['arduino', 'arduino uno', 'arduino nano', 'atmel', 'embedded', 'meson', 'docker']
 ---
 
 I decided to play around with my [Arduino][1] boards again, and this is an excellent opportunity to explain how to set up a development environment for cross-compilations. For this project, we need to set up some tools. The tools I decided to use are the avr-toolchain, including [AVRDUDE][6], [Docker][3] to set up the toolchain, and [Meson][2] as the build system. We will mainly focus on the [Arduino][1] boards, which use Atmels ATmega328p Microcontroller. These boards are, for example, the Arduino Uno and the Arduino Nano.
