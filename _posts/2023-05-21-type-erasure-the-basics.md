@@ -206,7 +206,7 @@ are getting bigger, we also need to care about the storage of these objects,
 especially if they need to be shared between different operations.
 
 If you consider the use of [`std::function`][5] you should remember the 
-description from  Vittorio Romeo: 
+description from Vittorio Romeo: 
 
 > `std::function` is a **heavyweight general-purpose polymorphic function wrapper** 
 > that is meant to **store and “own”** a callable object.[^3]
