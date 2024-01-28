@@ -18,9 +18,8 @@ end
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
-# Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
-# do not have a Java counterpart.
-gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
+gem "racc", "~> 1.6.2"
+gem "http_parser.rb", "~> 0.8.0"
 
 # Lock jekyll-sass-converter to 2.x on Linux-musl
 if RUBY_PLATFORM =~ /linux-musl/
