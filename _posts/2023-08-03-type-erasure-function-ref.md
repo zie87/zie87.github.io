@@ -241,7 +241,7 @@ toolbox for embedded development.
 [7]: https://www.foonathan.net/
 [8]: https://en.cppreference.com/w/cpp/utility/functional/function
 [9]: https://en.cppreference.com/w/cpp/utility/functional/move_only_function
-[10]: http://en.cppreference.com/w/cpp/language/partial_specialization
+[10]: https://en.cppreference.com/w/cpp/language/partial_specialization
 [11]: https://github.com/llvm/llvm-project/blob/llvmorg-16.0.6/llvm/include/llvm/ADT/STLFunctionalExtras.h
 [12]: https://vittorioromeo.info/index/blog/passing_functions_to_functions.html
 [16]: https://www.foonathan.net/2017/01/function-ref-implementation/
