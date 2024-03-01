@@ -126,7 +126,7 @@ The arguments have the following meanings:
 `--builddir build/atmega328p`
 : Sets the directory **build/atmega328p** for the build 
 
-The command mainly creates two files: `blinky.c` and `meson.build`. The file `meson.build` is our main build system configuration, and `blinky. c` is a **C** example. Both could be more useful for our use case, so we must replace/adapt them. Let's start with `blinky. c`. We replace the content of the file with a simple blinky implementation: 
+The command mainly creates two files: `blinky.c` and `meson.build`. The file `meson.build` is our main build system configuration, and `blinky.c` is a **C** example. Both could be more useful for our use case, so we must replace/adapt them. Let's start with `blinky.c`. We replace the content of the file with a simple blinky implementation: 
 
 ```c
 #include <avr/io.h> // Contains I/O Register definitions
@@ -170,7 +170,7 @@ exe = executable(
 )
 ```
 
-The first change explicitly defines the `sources` parameter. For now, this is more of a cosmetic change. More important is the line `c_args: ['-DF_CPU=16000000UL']`. This argument defines the clock frequency (16 MHz) to our build, which the AVR libraries must provide, e.g., the `_delay_ms` function. The last change is to define the file extension with: `name_suffix: 'elf'`. We need to manipulate the executable later to flash it to our device. For this, we need to be able to distinguish the different files by extension. 
+The first change explicitly defines the `sources` parameter. For now, this is more of a cosmetic change. More important is the line `c_args: ['-DF_CPU=16000000UL']`. This argument defines the clock frequency (16 MHz) to our build, which the AVR libraries must provide to, e.g., the `_delay_ms` function. The last change is to define the file extension with: `name_suffix: 'elf'`. We need to manipulate the executable later to flash it to our device. For this, we need to be able to distinguish the different files by extension. 
 
 ## Enable the cross-compilation
 
@@ -195,7 +195,7 @@ strip       = prefix + '-strip'
 
 We use the `[constants]` section to define the prefix *avr* for all our toolchain programs and then define the name of each program. Most important are, for now, the entries `c` and `strip`, which are used internally by [Meson][2] for our current build. 
 
-The next step is configuring the compiler and the linker for our MCU via the `[built-in section]`. This section overrides the built-in defaults of [Meson][2].
+The next step is configuring the compiler and the linker for our MCU via the `[built-in options]` section. This section overrides the built-in defaults of [Meson][2].
 
 ```meson
 [built-in options]
@@ -225,7 +225,7 @@ The first option we need to override is `b_staticpic`. This variable defines if 
 
 Next are the compiler flags. We set our MCU type by adding `-mmcu=atmega328p` to the compiler flags. The flags `-ffunction-sections` and `-fdata-sections` tell the compiler to place each function and data item in its own section in the output file. This setting allows better link time optimization, which we also enable by the flag `-flto`. The last flag, "-fno-fat-lto-objects," will ensure only *slim* objects are provided, which helps with the link time. 
 
-The last configurations we need to set are for the linker. We need to select the MCU type as we have done for the compiler. The flags `-flto` and `-fuse-linker-plugin` are required for the link time optimizations. We ensure static linkage with the `-static` flag and `--gc-sections` can reduce the executable size based on the compiler flags `-ffunction-sections` and `-fdata-sections`. The last arguments are for convenience: `--no-warn-rwx-segment` suppresses a warning about the LOAD segment permissions, which does not apply to use, and `--print-memory-usage` gives us an excellent output after the linkage about the used memory regions.  
+The last configurations we need to set are for the linker. We need to select the MCU type as we have done for the compiler. The flags `-flto` and `-fuse-linker-plugin` are required for the link time optimizations. We ensure static linkage with the `-static` flag and `--gc-sections` can reduce the executable size based on the compiler flags `-ffunction-sections` and `-fdata-sections`. The last arguments are for convenience: `--no-warn-rwx-segment` suppresses a warning about the LOAD segment permissions, which does not apply to use, and `--print-memory-usage` gives us an excellent output about the used memory regions after the linkage.  
 
 > If you need more clarification about the proper compiler configurations, you can use the [Arduino IDE](https://docs.arduino.cc/software/ide-v2) builds as a template. If you run the build, the output shows which flags are used by the compiler and the linker.  
 {: .prompt-info }
