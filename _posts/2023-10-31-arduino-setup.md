@@ -3,7 +3,7 @@ layout: 'post'
 title: 'Baremetal Arduino: Setting up a development enviroment'
 date: '2023-10-31 13:00:00'
 categories: ['Embedded', 'Baremetal Arduino']
-tags: ['arduino', 'arduino uno', 'arduino nano', 'arduino mega', 'atmel', 'embedded', 'meson', 'docker']
+tags: ['arduino', 'arduino uno', 'arduino nano', 'atmel', 'embedded', 'meson', 'docker']
 ---
 
 I decided to play around with my [Arduino][1] boards again, and this is an excellent opportunity to explain how to set up a development environment for cross-compilations. For this project, we need to set up some tools. The tools I decided to use are the avr-toolchain, including [AVRDUDE][6], [Docker][3] to set up the toolchain, and [Meson][2] as the build system. We will mainly focus on the [Arduino][1] boards, which use Atmels ATmega328p Microcontroller. These boards are, for example, the Arduino Uno and the Arduino Nano.
@@ -289,7 +289,7 @@ The call of the `find_program` function gives us the `avr-objcopy` executable. W
 Now, if we recompile the project with `meson compile -C build`, we will also find the file `blinky.hex` in the build directory. This hex file can be used by [AVRDUDE][6] to program our [Arduino][1] boards. The command to start the programming looks like this:
 
 ```sh
-avrdude -p atmega328p -c arduino -P /dev/ttyUSB0 -b 115200 -U flash:w:./build/blinky.hex:i
+avrdude -p atmega328p -c arduino -P /dev/ttyACM0 -b 115200 -U flash:w:./build/blinky.hex:i
 ```
 
 Let us unpack the provided arguments:
@@ -311,7 +311,7 @@ Let us unpack the provided arguments:
 
 ## Summary
 
-In this blog post, we set a development environment for [Arduino][1] with the use of [Meson][2], [Docker][3] and [ADRDUDE][6]. The setup of such an environment is a small amount of work, which pays off quickly. The environment we have created allows us to reproduce our builds on each system that supports docker. The build system makes it easy to compile and ensures the compilation configurations for the complete project.
+In this blog post, we created a development environment for [Arduino][1] with the use of [Meson][2], [Docker][3] and [ADRDUDE][6]. The setup of such an environment is a small amount of work, which pays off quickly. The environment we have created allows us to reproduce our builds on each system that supports docker. The build system makes it easy to compile and ensures the compilation configurations for the complete project.
 
 ## References
 
