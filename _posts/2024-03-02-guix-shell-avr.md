@@ -3,7 +3,7 @@ layout: 'post'
 title: 'GNU Guix: Development Shell for Arduino'
 date: '2024-03-02 16:05:00'
 categories: ['Guix' ]
-tags: ['guix', 'nix', 'gnu', 'linux', 'functional', 'scheme', 'guile', 'arduino', 'arduino uno', 'arduino nano', 'atmel', 'embedded', 'meson', 'just']
+tags: ['guix', 'gnu', 'linux', 'functional', 'scheme', 'guile', 'arduino', 'arduino uno', 'arduino nano', 'atmel', 'embedded', 'meson']
 ---
 
 I'm still very much in love with [GNU Guix][1], and there is one feature I enjoy in particular: [`guix shell`][2]. I like this feature so much that I will use this post to introduce it briefly. To do so, I will revisit an older post about setting up a [development environment for Arduino][3].
