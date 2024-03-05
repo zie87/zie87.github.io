@@ -242,7 +242,7 @@ This post described only the tip of the iceberg about the possibilities [`guix s
 [9]: https://mesonbuild.com/
 [10]: https://ninja-build.org/
 [11]: https://github.com/avrdudes/avrdude
-[12]: https://codeberg.org/zie87/guix-samples/src/branch/main/shells/avr/blinky
+[12]: https://codeberg.org/zie87/playground/src/branch/main/shells/avr/blinky
 [13]: https://guix.gnu.org/en/cookbook/en/html_node/Guix-Containers.html
 [14]: https://en.wikipedia.org/wiki/Linux_namespaces
 [15]: https://guix.gnu.org/manual/en/html_node/Invoking-guix-describe.html
