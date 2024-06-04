@@ -3,4 +3,4 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest
-  (list "ruby@3.2" "jekyll" "bundler" "libffi"))
+  (list "ruby@3.2" "jekyll" "bundler" "libffi" "make" "gcc-toolchain"))
