@@ -1,9 +1,6 @@
 # vim: set ft=make :
 root_dir := justfile_directory()
 
-#target := "atmega328p"
-#buildtype := "debug"
-
 default:
 	@just --list
 
